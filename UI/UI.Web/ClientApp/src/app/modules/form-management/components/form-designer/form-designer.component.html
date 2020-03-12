@@ -1,0 +1,34 @@
+<div class="row m-1 rtl">
+  <div class="col-sm-3">
+    <ul class="list-group">
+      <li *ngFor="let field of fields" class="list-group-item" [ngClass]="{'active': selectedItem == field}" (click)="listClick($event, field)">
+        {{field.label}}
+      </li>
+    </ul>
+  </div>
+
+  <div class="col-sm-5">
+    <div class="card">
+      <div class="card-header">Dynamic Forms</div>
+      <div class="card-body">
+        <dynamic-form-builder [fields]="getFields()"></dynamic-form-builder>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4" *ngIf="this.properties">
+    <div class="card">
+      <div class="card-header">Field Properties</div>
+      <div class="card-body">
+        <dynamic-form-builder [fields]="this.properties"></dynamic-form-builder>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="col-sm-12">
+  <div class="form-group" [formGroup]="form">
+    <label>JSON</label>
+    <textarea formControlName="fields" class="form-control" rows="3"></textarea>
+  </div>
+</div>

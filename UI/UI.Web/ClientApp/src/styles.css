@@ -1,0 +1,24 @@
+
+
+/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: 'yekan';
+  src:url('resources/fonts/yekan/yekan.eot?#') format('eot'), url('resources/fonts/yekan/yekan.woff') format('woff'), url('resources/fonts/yekan/yekan.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'sans-fanum';
+  src: url('resources/fonts/sans/IRANSansWeb(FaNum).ttf') format('truetype');
+}
+
+body {
+  font-family: sans-fanum;
+}
+
+.btn-toollbar {
+  font-size: .7rem;
+}
+
+.readonly-row {
+  color: darkgrey;
+}

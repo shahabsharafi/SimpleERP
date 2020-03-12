@@ -21,3 +21,9 @@ services:
     build:
       context: .
       dockerfile: Services/Document/SimpleERP.Document.API/Dockerfile
+
+  simpleerp.ui.web:
+    image: ${DOCKER_REGISTRY-}simpleerpuiweb
+    build:
+      context: .
+      dockerfile: UI/Web/SimpleERP.UI.Web/Dockerfile

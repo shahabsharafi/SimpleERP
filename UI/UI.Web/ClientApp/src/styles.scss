@@ -1,0 +1,23 @@
+$fa-font-path: "../node_modules/font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome.scss";
+@import "~bootstrap-v4-rtl/scss/bootstrap-rtl.scss";
+
+@font-face {
+  font-family: 'yekan';
+    src: url('resources/fonts/yekan/yekan.eot?#') format('eot'), url('resources/fonts/yekan/yekan.woff') format('woff'), url('resources/fonts/yekan/yekan.ttf') format('truetype');
+  font-family: 'sans-fanum';
+    src: url('resources/fonts/sans/iransansweb-fanum.ttf') format('truetype');
+}
+
+body {
+  font-family: sans-fanum;
+}
+
+.btn-toollbar {
+  font-size: .7rem;
+}
+
+.readonly-row {
+  color: darkgrey;
+}
+
