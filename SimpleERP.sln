@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28917.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleERP.Document.API", "Services\Document\SimpleERP.Document.API\SimpleERP.Document.API.csproj", "{0018ED2C-C94B-4A96-A242-5F7E441C6EF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleERP.Document.API", "Services\Document\SimpleERP.Document.API\SimpleERP.Document.API.csproj", "{0018ED2C-C94B-4A96-A242-5F7E441C6EF6}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{A545285C-0B40-44E0-BACE-A631720356E9}"
 EndProject
@@ -18,9 +18,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{BF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{386A84DD-18D9-41A6-9D9B-AA9B8571FB7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleERP.Infrastructure", "Libraries\SimpleERP.Infrastructure\SimpleERP.Infrastructure.csproj", "{F883B61F-D21D-4E0F-9AD5-E62A73790996}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleERP.Infrastructure", "Libraries\SimpleERP.Infrastructure\SimpleERP.Infrastructure.csproj", "{F883B61F-D21D-4E0F-9AD5-E62A73790996}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Document", "Document", "{6B6D3337-1C76-4F7E-AC35-4946B04E7C2E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{D3E3DDEB-F679-4FCE-AF31-B2DEF103B45E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{A30E51AA-7F67-4CC0-8E79-996000E9106A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +53,7 @@ Global
 		{2EE897FB-310E-427E-8123-12EBEF6C8945} = {903E1350-0811-4355-BFEC-B10DB20CA661}
 		{F883B61F-D21D-4E0F-9AD5-E62A73790996} = {386A84DD-18D9-41A6-9D9B-AA9B8571FB7F}
 		{6B6D3337-1C76-4F7E-AC35-4946B04E7C2E} = {BFB04033-098E-4D5F-AE99-DBFF1881F1EA}
+		{A30E51AA-7F67-4CC0-8E79-996000E9106A} = {D3E3DDEB-F679-4FCE-AF31-B2DEF103B45E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F65EACF5-4168-4345-B8AF-21143E9EC005}
