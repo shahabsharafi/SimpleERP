@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SimpleERP.Document.API.Infrastructure.Data
+namespace SimpleERP.Document.API.Infrastructure.Model
 {
-    public class DocumentInfo: IEntity
+    public class DocumentInfoModel
     {
         public long Id { get; set; }
         public string  No { get; set; }
@@ -19,10 +19,10 @@ namespace SimpleERP.Document.API.Infrastructure.Data
         public string DateOfModify { get; set; }
         public string Modifier { get; set; }
         public long IssuerId { get; set; }
-        public Issuer Issuer { get; set; }
+        public string IssuerTitle { get; set; }
         public long DomainId { get; set; }
-        public Domain Domain { get; set; }
+        public string DomainTitle { get; set; }
         public long TypeId { get; set; }
-        public Type Type { get; set; }
+        public string TypeTitle { get; set; }
     }
 }
