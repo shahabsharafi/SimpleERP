@@ -19,6 +19,7 @@
   <ItemGroup>
     <Folder Include="Infrastructure\Migrations\" />
     <Folder Include="Infrastructure\Models\" />
+    <Folder Include="Infrastructure\Contracts\" />
     <Folder Include="Infrastructure\Utilities\" />
   </ItemGroup>
 
