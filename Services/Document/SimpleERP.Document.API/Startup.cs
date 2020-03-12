@@ -40,6 +40,7 @@ namespace SimpleERP.Document.API
                 .UseMySql(Configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly("SimpleERP.Document.API")
             ));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var container = new ContainerBuilder();

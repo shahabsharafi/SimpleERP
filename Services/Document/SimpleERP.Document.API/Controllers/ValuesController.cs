@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SimpleERP.Document.API.Infrastructure.Data;
 
 namespace SimpleERP.Document.API.Controllers
 {
@@ -10,10 +11,17 @@ namespace SimpleERP.Document.API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        ApplicationDbContext _context;
+        public ValuesController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            var entities = _context.Set<Issuer>();
+            var obj = entities.FirstOrDefault();
             return new string[] { "value1", "value2" };
         }
 
