@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { IContractModel, ContractModel } from '../../models';
+import { IDocumentInfoModel, DocumentInfoModel } from '../../models';
 import { IApiDataResult, ApiResult, ApiDataResult, ApiCollectionResult, ICollection, Collection, QueryString, TokenService } from '../../../../infrastructures';
 import { Observable, of } from 'rxjs';
 import { IGridParams, IGridExcelParams, GridExcelParams, GridService } from '../../../../infrastructures/services/models/grid-parameter';
@@ -7,7 +7,7 @@ import { IGridParams, IGridExcelParams, GridExcelParams, GridService } from '../
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
-export class ContractService extends GridService {
+export class DocumentInfoService extends GridService {
 
   private _url: string;
 
@@ -16,10 +16,10 @@ export class ContractService extends GridService {
     this._url = this.baseUrl + 'api/contracts';   
   }
 
-  getAll(request: IGridParams): Observable<ApiCollectionResult<IContractModel>> {
+  getAll(request: IGridParams): Observable<ApiCollectionResult<IDocumentInfoModel>> {
     const queryString: string = QueryString.serialize(request);
     let url: string = this._url + (queryString ? ('?' + queryString) : '');
-    return this.rest.get<ApiCollectionResult<IContractModel>>(url);
+    return this.rest.get<ApiCollectionResult<IDocumentInfoModel>>(url);
   }
 
   getExcel(request: IGridParams): Observable<Blob> {
@@ -28,17 +28,17 @@ export class ContractService extends GridService {
     return this.rest.get(this._url + (queryString ? ('?' + queryString) : ''), { responseType: 'blob' });
   }
 
-  get(id: number): Observable<IApiDataResult<IContractModel>> {
-    return this.rest.get<IApiDataResult<IContractModel>>(this._url + '/' + id);
+  get(id: number): Observable<IApiDataResult<IDocumentInfoModel>> {
+    return this.rest.get<IApiDataResult<IDocumentInfoModel>>(this._url + '/' + id);
   }
 
-  save(model: IContractModel): Observable<IApiDataResult<IContractModel>> {
-    let result: Observable<IApiDataResult<IContractModel>>;
+  save(model: IDocumentInfoModel): Observable<IApiDataResult<IDocumentInfoModel>> {
+    let result: Observable<IApiDataResult<IDocumentInfoModel>>;
     if (model.id) {
-      result = this.rest.put<IApiDataResult<IContractModel>>(this._url + '/' + model.id, model);
+      result = this.rest.put<IApiDataResult<IDocumentInfoModel>>(this._url + '/' + model.id, model);
     } else {
       model.no = Math.floor(Math.random() * 1000) + '';
-      result = this.rest.post<IApiDataResult<IContractModel>>(this._url, model);
+      result = this.rest.post<IApiDataResult<IDocumentInfoModel>>(this._url, model);
     }
     return result;
   }
@@ -58,25 +58,25 @@ export class ContractService extends GridService {
   }
 }
 
-export class ContractFackService extends ContractService {
+export class DocumentInfoFackService extends DocumentInfoService {
 
-  static CONTRACT: IContractModel = new ContractModel("", 0, '', '', false, (new Date()).toJSON());
-  static CONTRACT_ARRAY: IContractModel[] = [ContractFackService.CONTRACT];
-  static CONTRACTS: ICollection<IContractModel> = new Collection<IContractModel>(ContractFackService.CONTRACT_ARRAY, 1);
+  static CONTRACT: IDocumentInfoModel = new DocumentInfoModel(0, "");
+  static CONTRACT_ARRAY: IDocumentInfoModel[] = [DocumentInfoFackService.CONTRACT];
+  static CONTRACTS: ICollection<IDocumentInfoModel> = new Collection<IDocumentInfoModel>(DocumentInfoFackService.CONTRACT_ARRAY, 1);
 
   constructor() { super(null, null); }
 
-  getAll(request: IGridParams): Observable<ApiCollectionResult<IContractModel>> {
-    var obj = new ApiCollectionResult<IContractModel>(true, 200, "", ContractFackService.CONTRACTS);
+  getAll(request: IGridParams): Observable<ApiCollectionResult<IDocumentInfoModel>> {
+    var obj = new ApiCollectionResult<IDocumentInfoModel>(true, 200, "", DocumentInfoFackService.CONTRACTS);
     return of(obj);
   }
 
-  get(id: number): Observable<IApiDataResult<IContractModel>> {
-    var obj = new ApiDataResult<IContractModel>(true, 200, "", ContractFackService.CONTRACT);
+  get(id: number): Observable<IApiDataResult<IDocumentInfoModel>> {
+    var obj = new ApiDataResult<IDocumentInfoModel>(true, 200, "", DocumentInfoFackService.CONTRACT);
     return of(obj);
   }
 
-  save(model: IContractModel): Observable<IApiDataResult<IContractModel>> { return of(null); }
+  save(model: IDocumentInfoModel): Observable<IApiDataResult<IDocumentInfoModel>> { return of(null); }
 
   delete(id: number): Observable<ApiResult> { return of(null) }
 

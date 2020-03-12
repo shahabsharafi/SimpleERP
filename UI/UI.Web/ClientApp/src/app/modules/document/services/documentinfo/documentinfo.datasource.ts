@@ -5,7 +5,7 @@ import { GridParams, IGridParams, GridService } from '../../../../infrastructure
 //https://www.ag-grid.com/javascript-grid-server-side-model-infinite/
 
 @Injectable()
-export class ContractDatasource implements IServerSideDatasource  { 
+export class DocumentInfoDatasource implements IServerSideDatasource  { 
 
   private _gridService: GridService;
   private _currentFilter?: IGridParams;

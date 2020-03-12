@@ -1,10 +1,10 @@
-export class IDocumentModel {
+export class IDocumentInfoModel {
   id?: number;
   no: string;
 }
 
 
-export class DocumentModel implements IDocumentModel {
+export class DocumentInfoModel implements IDocumentInfoModel {
   constructor(
     public id: number | null,
     public no: string

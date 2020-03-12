@@ -1,1 +1,1 @@
-export * from './document.model';
+export * from './documentinfo.model';

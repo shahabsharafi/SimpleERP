@@ -1,7 +1,7 @@
 import { async } from '@angular/core/testing';
-import { ContractService } from './contract.service';
+import { DocumentInfoService } from './documentinfo.service';
 import { ApiResult } from '../../../../infrastructures';
-import { ContractModel } from '../../models';
+import { DocumentInfoModel } from '../../models';
 import { of, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -28,7 +28,7 @@ class RestFackService extends HttpClient {
   }
 }
 
-describe('ContractService', () => {
+describe('DocumentInfoService', () => {
 
   let restService: RestFackService;
 
@@ -38,35 +38,35 @@ describe('ContractService', () => {
 
   it(`check getAll`, () => {
     const get_Spy = spyOn(restService, 'get').and.callThrough();
-    const contractService = new ContractService(restService, '');
+    const contractService = new DocumentInfoService(restService, '');
     contractService.getAll(null);
     expect(get_Spy).toHaveBeenCalled();
   });
 
   it(`check get`, () => {
     const get_Spy = spyOn(restService, 'get').and.callThrough();
-    const contractService = new ContractService(restService, '');
+    const contractService = new DocumentInfoService(restService, '');
     contractService.get(0);
     expect(get_Spy).toHaveBeenCalled();
   });
 
   it(`check insert`, () => {
     const post_Spy = spyOn(restService, 'post').and.callThrough();
-    const contractService = new ContractService(restService, '');
-    contractService.save(new ContractModel(null, null, '', '', false, new Date()));
+    const contractService = new DocumentInfoService(restService, '');
+    contractService.save(new DocumentInfoModel(null, null));
     expect(post_Spy).toHaveBeenCalled();
   });
 
   it(`check update`, () => {
     const put_Spy = spyOn(restService, 'put').and.callThrough()
-    const contractService = new ContractService(restService, '');
-    contractService.save(new ContractModel(null, 1, '', '', false, new Date()));
+    const contractService = new DocumentInfoService(restService, '');
+    contractService.save(new DocumentInfoModel(null, 1));
     expect(put_Spy).toHaveBeenCalled();    
   });
 
   it(`check delete`, () => {
     const delete_Spy = spyOn(restService, 'delete').and.callThrough()
-    const contractService = new ContractService(restService, '');
+    const contractService = new DocumentInfoService(restService, '');
     contractService.delete(0);
     expect(delete_Spy).toHaveBeenCalled();
   });

@@ -51,7 +51,7 @@
     <None Remove="ClientApp\src\app\infrastructures\utilities\index.ts" />
     <None Remove="ClientApp\src\app\infrastructures\utilities\utility.ts" />
     <None Remove="ClientApp\src\app\modules\document\index.ts" />
-    <None Remove="ClientApp\src\app\modules\document\services\document\index.ts" />
+    <None Remove="ClientApp\src\app\modules\document\services\documentinfo\index.ts" />
     <None Remove="ClientApp\src\app\modules\document\services\index.ts" />
     <None Remove="ClientApp\src\app\modules\index.ts" />
   </ItemGroup>
@@ -68,7 +68,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\infrastructures\utilities\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\infrastructures\utilities\utility.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\modules\document\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\document\services\document\index.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\modules\document\services\documentinfo\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\modules\document\services\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\modules\index.ts" />
   </ItemGroup>

@@ -1,19 +1,18 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ContractService } from '../../services/contract';
-import { ContractDatasource } from '../../services/contract/contract.datasource';
 import { TextFilter, SimpleFilter, AllModules, Module  } from '@ag-grid-enterprise/all-modules';
 import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService } from '../../../../infrastructures';
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
 import * as moment from 'jalali-moment';
-import { IContractModel, ContractModel } from '../../models';
+import { IDocumentInfoModel, DocumentInfoModel } from '../../models';
+import { DocumentInfoDatasource, DocumentInfoService } from '../../services/documentinfo'; 
 
 @Component({
-  templateUrl: './contract.component.html',
-  styleUrls: ['./contract.component.css']
+  templateUrl: './documentinfo.component.html',
+  styleUrls: ['./documentinfo.component.css']
 })
-export class ContractComponent implements OnInit {
+export class DocumentInfoComponent implements OnInit {
   private gridApi;
   private gridColumnApi;
 
@@ -22,19 +21,19 @@ export class ContractComponent implements OnInit {
   public modules: Module[] = AllModules;
   private rowSelection: string;
   public suppressRowClickSelection: boolean;
-  private rowData: IContractModel[];
+  private rowData: IDocumentInfoModel[];
   private defaultColDef: any;
   private columnDefs: any[];
-  private updatedData: IContractModel;
-  private selectedRowData: IContractModel;
+  private updatedData: IDocumentInfoModel;
+  private selectedRowData: IDocumentInfoModel;
   private selectedColumn: string;
   private selectedRowIndex: number;
   private editingRowIndex: number;
   private checkBoxColumn: any;
   public gridOptions: any = {};
 
-  constructor(private fb: FormBuilder, @Inject('RESOURCE') public resource: any, private contractService: ContractService, private contractDatasource: ContractDatasource, private convertorService: ConvertorService) {
-    contractDatasource.init(contractService);
+  constructor(private fb: FormBuilder, @Inject('RESOURCE') public resource: any, private documentInfoService: DocumentInfoService, private documentInfoDatasource: DocumentInfoDatasource, private convertorService: ConvertorService) {
+    documentInfoDatasource.init(documentInfoService);
   }
 
   ngOnInit() {
@@ -55,7 +54,7 @@ export class ContractComponent implements OnInit {
     ];
     this.gridOptions.rowModelType = 'serverSide';
     this.gridOptions.paginationPageSize = 10;
-    //this.gridOptions.datasource = this.contractDatasource;
+    //this.gridOptions.datasource = this.documentInfoDatasource;
     
     this.gridOptions.getRowClass = function (params) {
       return '';// (params.data.readonly ? 'readonly-row' : '');
@@ -67,19 +66,19 @@ export class ContractComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-    params.api.setServerSideDatasource(this.contractDatasource);
+    params.api.setServerSideDatasource(this.documentInfoDatasource);
     params.api.sizeColumnsToFit();
   }
 
   onSelectionChanged(event) {
-    const selectedNodes: ({ data: IContractModel } | null)[] = event.api.getSelectedNodes();
+    const selectedNodes: ({ data: IDocumentInfoModel } | null)[] = event.api.getSelectedNodes();
     const nodes = (selectedNodes || [{ data: null }]);
     if (nodes && nodes.length) {
-      const data: (IContractModel | null) = (nodes[0]).data;
+      const data: (IDocumentInfoModel | null) = (nodes[0]).data;
       if (data && data.id) {
-        this.contractService.get(data.id).toPromise().then(response => {
+        this.documentInfoService.get(data.id).toPromise().then(response => {
           this.selectedRowData = response.data;
-          this.form.setValue({ "title": response.data.title });
+          this.form.setValue({ "no": response.data.no });
         });
       }
     }
@@ -102,7 +101,7 @@ export class ContractComponent implements OnInit {
 
   onCellValueChanged(event) {
     if (event.data) {
-      this.updatedData = <IContractModel>event.data;      
+      this.updatedData = <IDocumentInfoModel>event.data;      
     }
   }
 
@@ -112,8 +111,8 @@ export class ContractComponent implements OnInit {
   saveRow() {
     if (this.updatedData != null) {
       const d = this.updatedData;
-      const model: IContractModel = new ContractModel(d.uniqueId, d.id, d.no, d.title, d.archived, d.startDate);
-      this.contractService.save(model).toPromise().then(rsp => {
+      const model: IDocumentInfoModel = new DocumentInfoModel(d.id, d.no);
+      this.documentInfoService.save(model).toPromise().then(rsp => {
         this.updatedData = null;
 
         this.gridApi.deselectAll();
@@ -121,9 +120,9 @@ export class ContractComponent implements OnInit {
         this.gridApi.setSortModel(null);
         this.gridApi.setFilterModel(null);
 
-        this.contractService.get(rsp.data.id).toPromise().then(response => {
+        this.documentInfoService.get(rsp.data.id).toPromise().then(response => {
           this.selectedRowData = response.data;
-          this.form.setValue({ "title": response.data.title });
+          this.form.setValue({ "no": response.data.no });
         });
       });
     }
@@ -133,7 +132,7 @@ export class ContractComponent implements OnInit {
     if (this.updatedData == null) {
       this.doSelect(false);     
       let d = new Date();
-      this.updatedData = new ContractModel(null, null, '', '', false, d.toJSON());
+      this.updatedData = new DocumentInfoModel(null, null);
       this.gridApi.updateRowData({
         add: [this.updatedData],
         addIndex: 0
@@ -177,30 +176,30 @@ export class ContractComponent implements OnInit {
   }
 
   saveForm() {
-    const model: IContractModel = (<any>Object).assign({}, this.form.value);
+    const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
     model.id = this.selectedRowData.id || null;
-    const result = this.contractService.save(model);
+    const result = this.documentInfoService.save(model);
     this.refreshGrid(result);
   }
 
   delete() {
     const id: number = this.selectedRowData.id;
-    const result = this.contractService.delete(id);
+    const result = this.documentInfoService.delete(id);
     this.refreshGrid(result);
   }
 
   deleteByFilter() {
-    const params: IGridParams = this.contractDatasource.getParams();
-    const result = this.contractService.deleteByFilter(params);
+    const params: IGridParams = this.documentInfoDatasource.getParams();
+    const result = this.documentInfoService.deleteByFilter(params);
     this.refreshGrid(result);
   }
 
   deleteByIds() {
     let nodes: any[] = this.gridApi.getSelectedNodes();
     if (nodes != null && nodes.length) {
-      const list: IContractModel[] = nodes.map(o => <IContractModel>o.data);
+      const list: IDocumentInfoModel[] = nodes.map(o => <IDocumentInfoModel>o.data);
       const ids: string[] = list.map(o => o.id.toString());
-      const result = this.contractService.deleteByIds(ids);
+      const result = this.documentInfoService.deleteByIds(ids);
       this.refreshGrid(result).then(_ => {
         this.gridApi.deselectAll();
       });      
@@ -208,8 +207,8 @@ export class ContractComponent implements OnInit {
   }
 
   exportToExcel() {
-    const params: IGridParams = this.contractDatasource.getParams();
-    this.contractService.getExcel(params).toPromise().then(o => {
+    const params: IGridParams = this.documentInfoDatasource.getParams();
+    this.documentInfoService.getExcel(params).toPromise().then(o => {
       saveAs(o, 'contect-list');
     });
   }

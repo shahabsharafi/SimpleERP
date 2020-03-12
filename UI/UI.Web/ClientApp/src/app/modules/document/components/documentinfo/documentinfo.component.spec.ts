@@ -2,16 +2,16 @@ import { TestBed, ComponentFixture, async } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { RouterTestingModule } from '@angular/router/testing';
 import { AgGridModule } from '@ag-grid-community/angular';
-import { ContractComponent } from './contract.component';
-import { ContractService, ContractFackService, ContractDatasource } from '../../services/contract';
+import { DocumentInfoComponent } from './documentinfo.component';
 import { IGridParams, IGridExcelParams } from '../../../../infrastructures';
-import { IGetRowsParams } from '@ag-grid-enterprise/all-modules';
+import { IServerSideGetRowsParams } from '@ag-grid-enterprise/all-modules';
+import { DocumentInfoDatasource, DocumentInfoService, DocumentInfoFackService } from '../../services/documentinfo';
 
-class ContractFackDatasource extends ContractDatasource {
+class DocumentInfoFackDatasource extends DocumentInfoDatasource {
 
   constructor() { super(); }
 
-  getRows(params: IGetRowsParams): void { }
+  getRows(params: IServerSideGetRowsParams): void { }
 
   getParams(): IGridParams { return null; }
 
@@ -20,10 +20,10 @@ class ContractFackDatasource extends ContractDatasource {
   destroy?(): void { }
 }
 
-describe('ContractComponent', () => {
+describe('DocumentInfoComponent', () => {
 
   let component: any;
-  let fixture: ComponentFixture<ContractComponent>;  
+  let fixture: ComponentFixture<DocumentInfoComponent>;  
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -34,17 +34,17 @@ describe('ContractComponent', () => {
         RouterTestingModule
       ],
       declarations: [        
-        ContractComponent,        
+        DocumentInfoComponent,        
       ],
       providers: [
         { provide: 'RESOURCE', useValue: { default: { "contract_title": "قرارداد" } }, deps: [] },
-        { provide: ContractService, useClass: ContractFackService },
-        { provide: ContractDatasource, useClass: ContractFackDatasource }
+        { provide: DocumentInfoService, useClass: DocumentInfoFackService },
+        { provide: DocumentInfoDatasource, useClass: DocumentInfoFackDatasource }
       ],
     }).compileComponents();
 
     // create component and test fixture
-    fixture = TestBed.createComponent(ContractComponent);
+    fixture = TestBed.createComponent(DocumentInfoComponent);
 
     // get test component from the fixture
     component = fixture.componentInstance;
