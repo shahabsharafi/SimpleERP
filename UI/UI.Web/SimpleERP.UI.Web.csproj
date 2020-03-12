@@ -53,14 +53,6 @@
     <None Remove="ClientApp\src\app\modules\contract-management\index.ts" />
     <None Remove="ClientApp\src\app\modules\contract-management\services\contract\index.ts" />
     <None Remove="ClientApp\src\app\modules\contract-management\services\index.ts" />
-    <None Remove="ClientApp\src\app\modules\form-management\index.ts" />
-    <None Remove="ClientApp\src\app\modules\identity\components\index.ts" />
-    <None Remove="ClientApp\src\app\modules\identity\components\login\index.ts" />
-    <None Remove="ClientApp\src\app\modules\identity\components\register\index.ts" />
-    <None Remove="ClientApp\src\app\modules\identity\index.ts" />
-    <None Remove="ClientApp\src\app\modules\identity\services\acount\index.ts" />
-    <None Remove="ClientApp\src\app\modules\identity\services\acount\models\index.ts" />
-    <None Remove="ClientApp\src\app\modules\identity\services\index.ts" />
     <None Remove="ClientApp\src\app\modules\index.ts" />
   </ItemGroup>
 
@@ -78,14 +70,6 @@
     <TypeScriptCompile Include="ClientApp\src\app\modules\contract-management\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\modules\contract-management\services\contract\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\modules\contract-management\services\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\form-management\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\identity\components\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\identity\components\login\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\identity\components\register\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\identity\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\identity\services\acount\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\identity\services\acount\models\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\identity\services\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\modules\index.ts" />
   </ItemGroup>
 
