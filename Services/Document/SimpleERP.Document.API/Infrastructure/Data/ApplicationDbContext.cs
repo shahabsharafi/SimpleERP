@@ -25,8 +25,11 @@ namespace SimpleERP.Document.API.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            var schema = "ContractManagement";
+            var schema = "DocumentManagement";
             builder.Entity<DocumentInfo>().ToTable("DocumentInfos", schema);
+            builder.Entity<Domain>().ToTable("DocumentInfos", schema);
+            builder.Entity<Issuer>().ToTable("DocumentInfos", schema);
+            builder.Entity<Type>().ToTable("DocumentInfos", schema);
 
         }
     }
