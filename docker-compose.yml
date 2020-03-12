@@ -21,6 +21,8 @@ services:
     build:
       context: .
       dockerfile: Services/Document/SimpleERP.Document.API/Dockerfile
+    ports:
+      - "8000:80"
 
   simpleerp.ui.web:
     image: ${DOCKER_REGISTRY-}simpleerpuiweb

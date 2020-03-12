@@ -1,22 +1,22 @@
 import Dexie from 'dexie';
-import { IContractModel } from '../models';
+import { IDocumentModel } from '../models';
 
 
-class ContractManagementDatabase extends Dexie {
+class DocumentDatabase extends Dexie {
     // Declare implicit table properties.
     // (just to inform Typescript. Instanciated by Dexie in stores() method)
-    contracts: Dexie.Table<IContractModel, number>; // number = type of the primkey
+    documents: Dexie.Table<IDocumentModel, number>; // number = type of the primkey
     //...other tables goes here...
 
     constructor () {
-        super("ContractManagementDatabase");
+      super("DocumentDatabase");
         this.version(1).stores({
-            contracts: '++id, first, last',
+            contracts: '++id, no',
             //...other tables goes here...
         });
         // The following line is needed if your typescript
         // is compiled using babel instead of tsc:
-        this.contracts = this.table("contracts");
+      this.documents = this.table("documents");
     }
 }
 
