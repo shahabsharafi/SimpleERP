@@ -18,10 +18,17 @@ namespace SimpleERP.Document.API.Infrastructure.Data
         }
 
         public DbSet<DocumentInfo> DocumentInfos { get; }
-        public DbSet<Domain> Domain { get; }
-        public DbSet<Issuer> Issuer { get; }
-        public DbSet<Type> Type { get; }
+        public DbSet<Domain> Domains { get; }
+        public DbSet<Issuer> Issuers { get; }
+        public DbSet<Type> Types { get; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Seed();
+        }
     }
+
+    
 }
 
 

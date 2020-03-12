@@ -9,18 +9,18 @@ using SimpleERP.Document.API.Infrastructure.Contracts;
 using SimpleERP.Document.API.Infrastructure.Data;
 using SimpleERP.Document.API.Infrastructure.Model;
 
-namespace Tadkar.EPMS.Services.ContractManagement.API.Controllers
+namespace SimpleERP.Document.API.Controllers
 {
 
 
     //[Authorize(Policy = "SellerPolicy")]
     [Route("api/[controller]")]
     [ApiController]
-    public class ContractsController : ControllerBase
+    public class DocumentInfosController : ControllerBase
     {
         IUnitOfRepository _uor;
 
-        public ContractsController(IUnitOfRepository uor)
+        public DocumentInfosController(IUnitOfRepository uor)
         {
             this._uor = uor;
         }
@@ -29,8 +29,25 @@ namespace Tadkar.EPMS.Services.ContractManagement.API.Controllers
         public IQueryable Get()
         {
             var list = this._uor.DocumentInfoRepository.TableNoTracking;
-            var rows = list.Select(item => new DocumentInfoModel() { Id = item.Id, No = item.No })
-                .OrderByDescending(o => o.Id);
+            var rows = list.Select(obj => new DocumentInfoModel()
+            {
+                Id = obj.Id,
+                No = obj.No,
+                Subject = obj.Subject,
+                Text = obj.Text,
+                FilePath = obj.FilePath,
+                DateOfRelease = obj.DateOfRelease,
+                Creator = obj.Creator,
+                DateOfCreate = obj.DateOfCreate,
+                Modifier = obj.Modifier,
+                DateOfModify = obj.DateOfModify,
+                DomainId = obj.DomainId,
+                DomainTitle = obj.Domain.Title,
+                IssuerId = obj.IssuerId,
+                IssuerTitle = obj.Issuer.Title,
+                TypeId = obj.TypeId,
+                TypeTitle = obj.Type.Title
+            }).OrderByDescending(o => o.Id);
             return rows;
         }
 
@@ -40,7 +57,24 @@ namespace Tadkar.EPMS.Services.ContractManagement.API.Controllers
         {
             var obj = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
             //var model = this._mapper.Map<ContractModel>(obj);
-            var model = new DocumentInfoModel() { Id = obj.Id, No = obj.No };
+            var model = new DocumentInfoModel() {
+                Id = obj.Id,
+                No = obj.No,
+                Subject = obj.Subject,
+                Text = obj.Text,
+                FilePath = obj.FilePath,
+                DateOfRelease = obj.DateOfRelease,
+                Creator = obj.Creator,
+                DateOfCreate = obj.DateOfCreate,
+                Modifier = obj.Modifier,
+                DateOfModify = obj.DateOfModify,
+                DomainId = obj.DomainId,
+                DomainTitle = obj.Domain.Title,
+                IssuerId = obj.IssuerId,
+                IssuerTitle = obj.Issuer.Title,
+                TypeId = obj.TypeId,
+                TypeTitle = obj.Type.Title
+            };
             return Ok(model);
         }
 

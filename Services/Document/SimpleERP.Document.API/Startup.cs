@@ -12,7 +12,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SimpleERP.Document.API.Infrastructure.Contracts;
 using SimpleERP.Document.API.Infrastructure.Data;
+using SimpleERP.Document.API.Infrastructure.Repositories;
+using SimpleERP.Infrastructure.Commons;
 
 namespace SimpleERP.Document.API
 {
@@ -41,6 +44,12 @@ namespace SimpleERP.Document.API
                     b => b.MigrationsAssembly("SimpleERP.Document.API")
             ));
 
+            services.AddSingleton(Configuration);
+
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IDocumentInfoRepository, DocumentInfoRepository>();
+            services.AddScoped<IUnitOfRepository, UnitOfRepository>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var container = new ContainerBuilder();
@@ -59,5 +68,7 @@ namespace SimpleERP.Document.API
 
             app.UseMvc();
         }
+
+        
     }
 }
