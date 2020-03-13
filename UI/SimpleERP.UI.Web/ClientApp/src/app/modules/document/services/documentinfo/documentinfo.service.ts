@@ -13,7 +13,7 @@ export class DocumentInfoService extends GridService {
 
   constructor(private rest: HttpClient, @Inject('CONTRACT_MANAGEMENT_SERVICE_URL') private baseUrl: string) {
     super();
-    this._url = this.baseUrl + 'api/contracts';   
+    this._url = this.baseUrl + 'api/documentinfos';   
   }
 
   getAll(request: IGridParams): Observable<ApiCollectionResult<IDocumentInfoModel>> {
@@ -60,19 +60,19 @@ export class DocumentInfoService extends GridService {
 
 export class DocumentInfoFackService extends DocumentInfoService {
 
-  static CONTRACT: IDocumentInfoModel = new DocumentInfoModel(0, "");
-  static CONTRACT_ARRAY: IDocumentInfoModel[] = [DocumentInfoFackService.CONTRACT];
-  static CONTRACTS: ICollection<IDocumentInfoModel> = new Collection<IDocumentInfoModel>(DocumentInfoFackService.CONTRACT_ARRAY, 1);
+  static DOCUMENT_INFO: IDocumentInfoModel = new DocumentInfoModel(0, "");
+  static DOCUMENT_INFO_ARRAY: IDocumentInfoModel[] = [DocumentInfoFackService.DOCUMENT_INFO];
+  static DOCUMENT_INFOS: ICollection<IDocumentInfoModel> = new Collection<IDocumentInfoModel>(DocumentInfoFackService.DOCUMENT_INFO_ARRAY, 1);
 
   constructor() { super(null, null); }
 
   getAll(request: IGridParams): Observable<ApiCollectionResult<IDocumentInfoModel>> {
-    var obj = new ApiCollectionResult<IDocumentInfoModel>(true, 200, "", DocumentInfoFackService.CONTRACTS);
+    var obj = new ApiCollectionResult<IDocumentInfoModel>(true, 200, "", DocumentInfoFackService.DOCUMENT_INFOS);
     return of(obj);
   }
 
   get(id: number): Observable<IApiDataResult<IDocumentInfoModel>> {
-    var obj = new ApiDataResult<IDocumentInfoModel>(true, 200, "", DocumentInfoFackService.CONTRACT);
+    var obj = new ApiDataResult<IDocumentInfoModel>(true, 200, "", DocumentInfoFackService.DOCUMENT_INFO);
     return of(obj);
   }
 

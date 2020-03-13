@@ -12,10 +12,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SimpleERP.Document.API.Infrastructure;
 using SimpleERP.Document.API.Infrastructure.Contracts;
 using SimpleERP.Document.API.Infrastructure.Data;
 using SimpleERP.Document.API.Infrastructure.Repositories;
+using SimpleERP.Libraries.API.Filters;
 using SimpleERP.Libraries.Infrastructure.Commons;
+using SimpleERP.Libraries.Infrastructure.Excel;
+using SimpleERP.Libraries.Infrastructure.QueryHandler;
 
 namespace SimpleERP.Document.API
 {
@@ -49,8 +53,18 @@ namespace SimpleERP.Document.API
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IDocumentInfoRepository, DocumentInfoRepository>();
             services.AddScoped<IUnitOfRepository, UnitOfRepository>();
+            services.AddScoped<IQueryHandler, AgGridQueryHandler>();
+            services.AddScoped<IResourceManager, ResourceManager>();
+            services.AddScoped<IExcelHelper, ExcelHelper>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddCors();
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(QueryHandlerFilterAction));
+                options.Filters.Add(typeof(ExcelFilterAction));
+                options.Filters.Add(typeof(ApiResultFilterAttribute));
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var container = new ContainerBuilder();
             container.Populate(services);
@@ -65,6 +79,15 @@ namespace SimpleERP.Document.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder =>
+            {
+                builder
+                    .SetIsOriginAllowed(_ => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
 
             app.UseMvc();
         }

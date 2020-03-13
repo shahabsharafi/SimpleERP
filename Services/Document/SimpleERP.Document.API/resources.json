@@ -1,0 +1,10 @@
+﻿{
+  "resources": {
+    "No": "شماره",
+    "Title": "عنوان",
+    "Archived": "آرشیو شده",
+    "StartDate": "زمان شروع",
+    "true_key": "بله",
+    "false_key": "خیر"
+  }
+}

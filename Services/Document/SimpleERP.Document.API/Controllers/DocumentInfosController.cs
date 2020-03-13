@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using SimpleERP.Document.API.Infrastructure.Contracts;
 using SimpleERP.Document.API.Infrastructure.Data;
 using SimpleERP.Document.API.Infrastructure.Model;
+using SimpleERP.Libraries.Infrastructure.Excel;
+using SimpleERP.Libraries.Infrastructure.QueryHandler;
 
 namespace SimpleERP.Document.API.Controllers
 {
@@ -16,7 +18,7 @@ namespace SimpleERP.Document.API.Controllers
     //[Authorize(Policy = "SellerPolicy")]
     [Route("api/[controller]")]
     [ApiController]
-    public class DocumentInfosController : ControllerBase
+    public class DocumentInfosController : ControllerBase, IQuerybleController
     {
         IUnitOfRepository _uor;
 
@@ -109,6 +111,47 @@ namespace SimpleERP.Document.API.Controllers
             var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
             await this._uor.DocumentInfoRepository.DeleteAsync(entity, cancellationToken);
             return Ok();
+        }
+
+        [NonAction]
+        public IQueryable GetQuery()
+        {
+            return this._uor.DocumentInfoRepository.Table;
+        }
+
+        [NonAction]
+        public async Task<ActionResult> DeleteFromQueryAsync(IQueryable query, CancellationToken cancellationToken = default)
+        {
+            //this model get from GetQury method 
+            if (query is IQueryable<DocumentInfo> q)
+            {
+                var list = q.ToList();
+                await this._uor.DocumentInfoRepository.DeleteRangeAsync(list, cancellationToken);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [NonAction]
+        public async Task<ActionResult> DeleteByIdAsync(string[] ids, CancellationToken cancellationToken = default)
+        {
+            var list = this._uor.DocumentInfoRepository.Table.Where(o => ids.Contains(o.Id.ToString())).ToList();
+            await this._uor.DocumentInfoRepository.DeleteRangeAsync(list, cancellationToken);
+            return Ok();
+        }
+
+        [NonAction]
+        public void CreateExcel(IQueryable query, IExcelHelper excelHelper)
+        {
+            //this model come from ui list requested model
+            if (query is IQueryable<DocumentInfoModel> q)
+            {
+                var list = q.ToList();
+                excelHelper.CreateExcel<DocumentInfoModel>("sheet1", list);
+            }
         }
     }
 }

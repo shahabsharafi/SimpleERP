@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\SimpleERP.Libraries.API\SimpleERP.Libraries.API.csproj" />
     <ProjectReference Include="..\..\..\Libraries\SimpleERP.Libraries.Infrastructure\SimpleERP.Libraries.Infrastructure.csproj" />
   </ItemGroup>
 

@@ -10,10 +10,10 @@ RUN apt-get update -yq \
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
-COPY ["UI/Web/SimpleERP.UI.Web.csproj", "UI/UI.Web/"]
-RUN dotnet restore "UI/Web/SimpleERP.UI.Web.csproj"
+COPY ["UI/SimpleERP.UI.Web/SimpleERP.UI.Web.csproj", "UI/SimpleERP.UI.Web/"]
+RUN dotnet restore "UI/SimpleERP.UI.Web/SimpleERP.UI.Web.csproj"
 COPY . .
-WORKDIR "/src/UI/Web"
+WORKDIR "/src/UI/SimpleERP.UI.Web"
 RUN dotnet build "SimpleERP.UI.Web.csproj" -c Release -o /app
 
 FROM build AS publish

@@ -36,7 +36,7 @@ import { DocumentInfoComponent, DocumentInfoService, DocumentInfoDatasource } fr
     ConvertorService,
     MessageService,
     TokenService,
-    { provide: 'CONTRACT_MANAGEMENT_SERVICE_URL', useFactory: function () { return 'https://localhost:8000/contractmanagement/' }, deps: [] },
+    { provide: 'CONTRACT_MANAGEMENT_SERVICE_URL', useFactory: function () { return 'http://localhost:8000/' }, deps: [] },
     DocumentInfoService,
     DocumentInfoDatasource,
     { provide: 'RESOURCE', useValue: resource, deps: [] }

@@ -44,7 +44,7 @@ export class DocumentInfoComponent implements OnInit {
       { colId: 'selector', hide: true, width: 40, headerName: '', sortable: false, filter: false, checkboxSelection: true },
       { field: 'id', headerName: this.resource.default.document_id, sortable: true, filter: 'agNumberColumnFilter' },
       { field: 'subject', headerName: this.resource.default.document_subject, sortable: true, filter: 'agTextColumnFilter' },
-      { field: 'no', headerName: this.resource.default.no, sortable: true, filter: 'agTextColumnFilter' }
+      { field: 'no', headerName: this.resource.default.document_no, sortable: true, filter: 'agTextColumnFilter' }
     ];
     this.gridOptions.rowModelType = 'serverSide';
     this.gridOptions.paginationPageSize = 10;
