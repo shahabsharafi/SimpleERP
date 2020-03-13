@@ -1,6 +1,5 @@
 import { ApiCollectionResult } from ".";
 import { Observable } from "rxjs";
-import { IContractModel } from "../../../modules/contract-management/models/contract.model";
 
 export interface IGridParams {
 
@@ -32,7 +31,10 @@ export class GridExcelParams implements IGridExcelParams {
 
   constructor(public startRow: number, public endRow: number, public sortModel: any, public filterModel: any, public isExcel: number) { }
 }
+
+export interface IEntity { id?: number; }
+
 export abstract class GridService {
-  abstract getAll(request: IGridParams): Observable<ApiCollectionResult<IContractModel>>;
+  abstract getAll(request: IGridParams): Observable<ApiCollectionResult<any>>;
 }
 

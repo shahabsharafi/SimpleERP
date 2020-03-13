@@ -3,8 +3,6 @@
     <div class="btn-toolbar mb-1" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group mr-2" role="group" aria-label="First group">
         <button type="button" class="btn btn-secondary btn-toollbar" (click)="select()"><i class="fa fa-check-square"></i> {{resource.default.select}}</button>
-        <button type="button" class="btn btn-secondary btn-toollbar" (click)="addItem()"><i class="fa fa-plus"></i> {{resource.default.add}}</button>
-        <button type="button" class="btn btn-secondary btn-toollbar" (click)="edit()"><i class="fa fa-edit"></i> {{resource.default.edit}}</button>
         <div ngbDropdown class="btn-group" role="group">
           <button id="btnGroupDrop1" type="button" class="btn btn-secondary btn-toollbar" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
             <i class="fa fa-remove"></i>{{resource.default.delete}}
@@ -15,8 +13,6 @@
           </div>
         </div>
         <button type="button" class="btn btn-secondary btn-toollbar"><i class="fa fa-table"></i> {{resource.default.excel}}</button>
-        <button type="button" class="btn btn-secondary btn-toollbar" (click)="saveRow()"><i class="fa fa-save"></i> {{resource.default.save}}</button>
-      </div>
     </div>
     <ag-grid-angular style="width: 450px; height: 300px;"
       enableRtl="true"
@@ -30,15 +26,9 @@
       [pagination]="true"
       [paginationAutoPageSize]="true"
       [stopEditingWhenGridLosesFocus]="true"
-      [suppressRowClickSelection]="suppressRowClickSelection"
       [modules]="modules"
       (selectionChanged)="onSelectionChanged($event)"
-      (gridReady)="onGridReady($event)"
-      (cellValueChanged)="onCellValueChanged($event)"
-      (rowClicked)="onRowClick($event)"
-      (cellClicked)="onCellClick($event)"
-      (cellEditingStarted)="onCellEditingStarted($event)"
-      (cellEditingStopped)="onCellEditingStopped($event)">
+      (gridReady)="onGridReady($event)">
     </ag-grid-angular>
   </div>
   <div class="col-auto">
@@ -46,10 +36,10 @@
       <!-- Default form register -->
       <form class="text-center border border-light p-5" (ngSubmit)="saveForm()" [formGroup]="form">
 
-        <p class="h4 mb-4">{{resource.default.contract_title}}</p>
+        <p class="h4 mb-4">{{resource.default.document_subject}}</p>
 
         <!-- Username -->
-        <input type="text" id="contractFormTitle" class="form-control mb-4" formControlName="title" placeholder="{{resource.default.contract_title}}">
+        <input type="text" id="txtSubject" class="form-control mb-4" formControlName="subject" placeholder="{{resource.default.document_subject}}">
 
         <!-- Sign in button -->
         <button class="btn btn-info btn-block my-4" type="submit">{{resource.default.save}}</button>

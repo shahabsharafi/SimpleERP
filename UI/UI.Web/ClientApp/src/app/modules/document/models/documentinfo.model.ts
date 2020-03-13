@@ -1,4 +1,4 @@
-export class IDocumentInfoModel {
+export interface IDocumentInfoModel {
   id?: number;
   no: string;
 }

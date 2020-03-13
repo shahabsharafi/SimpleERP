@@ -21,15 +21,9 @@ export class DocumentInfoComponent implements OnInit {
   public modules: Module[] = AllModules;
   private rowSelection: string;
   public suppressRowClickSelection: boolean;
-  private rowData: IDocumentInfoModel[];
   private defaultColDef: any;
   private columnDefs: any[];
-  private updatedData: IDocumentInfoModel;
   private selectedRowData: IDocumentInfoModel;
-  private selectedColumn: string;
-  private selectedRowIndex: number;
-  private editingRowIndex: number;
-  private checkBoxColumn: any;
   public gridOptions: any = {};
 
   constructor(private fb: FormBuilder, @Inject('RESOURCE') public resource: any, private documentInfoService: DocumentInfoService, private documentInfoDatasource: DocumentInfoDatasource, private convertorService: ConvertorService) {
@@ -38,7 +32,8 @@ export class DocumentInfoComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      title: ['', [Validators.required]]
+      subject: ['', [Validators.required]],
+      no: ['', [Validators.required]]
     });
     this.rowSelection = 'single';
     this.suppressRowClickSelection = false;
@@ -47,20 +42,16 @@ export class DocumentInfoComponent implements OnInit {
     };
     this.columnDefs = [
       { colId: 'selector', hide: true, width: 40, headerName: '', sortable: false, filter: false, checkboxSelection: true },
-      { field: 'title', headerName: this.resource.default.contract_title, sortable: true, filter: 'agTextColumnFilter' },
-      { field: 'id', headerName: 'ID', sortable: true, filter: 'agNumberColumnFilter' },
-      { field: 'readonly', headerName: 'Is readonly', sortable: true, filter: true, filterParams: AgGridUtility.getBooleanFilterParams(), cellRenderer: o => this.convertorService.toBoolean(o.getValue()) },      
-      { field: 'startDate', headerName: 'Date of start', sortable: true, filter: 'agDateColumnFilter', cellRenderer: o => this.convertorService.toJalali(o.getValue()) }
+      { field: 'id', headerName: this.resource.default.document_id, sortable: true, filter: 'agNumberColumnFilter' },
+      { field: 'subject', headerName: this.resource.default.document_subject, sortable: true, filter: 'agTextColumnFilter' },
+      { field: 'no', headerName: this.resource.default.no, sortable: true, filter: 'agTextColumnFilter' }
     ];
     this.gridOptions.rowModelType = 'serverSide';
     this.gridOptions.paginationPageSize = 10;
-    //this.gridOptions.datasource = this.documentInfoDatasource;
     
     this.gridOptions.getRowClass = function (params) {
-      return '';// (params.data.readonly ? 'readonly-row' : '');
+      return '';
     }
-    this.updatedData = null;
-    this.selectedRowIndex = null;
   }
 
   onGridReady(params) {
@@ -84,63 +75,6 @@ export class DocumentInfoComponent implements OnInit {
     }
   }
 
-  onCellClick(event: any): void {
-    this.selectedColumn = event.column.colId; 
-  }
-
-  onRowClick(event: any): void {
-    this.selectedRowIndex = event.rowIndex;
-    if (this.editingRowIndex != null && this.selectedRowIndex != null && this.editingRowIndex != this.selectedRowIndex)
-      this.saveRow();
-    this.editingRowIndex = null;
-  }
-
-  onCellEditingStarted(event: any) {
-    this.editingRowIndex = event.rowIndex;
-  }
-
-  onCellValueChanged(event) {
-    if (event.data) {
-      this.updatedData = <IDocumentInfoModel>event.data;      
-    }
-  }
-
-  onCellEditingStopped(event) {
-  }
-
-  saveRow() {
-    if (this.updatedData != null) {
-      const d = this.updatedData;
-      const model: IDocumentInfoModel = new DocumentInfoModel(d.id, d.no);
-      this.documentInfoService.save(model).toPromise().then(rsp => {
-        this.updatedData = null;
-
-        this.gridApi.deselectAll();
-        this.gridApi.refreshInfiniteCache();
-        this.gridApi.setSortModel(null);
-        this.gridApi.setFilterModel(null);
-
-        this.documentInfoService.get(rsp.data.id).toPromise().then(response => {
-          this.selectedRowData = response.data;
-          this.form.setValue({ "no": response.data.no });
-        });
-      });
-    }
-  }
-
-  addItem() {
-    if (this.updatedData == null) {
-      this.doSelect(false);     
-      let d = new Date();
-      this.updatedData = new DocumentInfoModel(null, null);
-      this.gridApi.updateRowData({
-        add: [this.updatedData],
-        addIndex: 0
-      });
-      
-    }
-  }
-
   select() {
     const column = this.gridColumnApi.getColumn('selector');
     const visible = !column.visible;
@@ -152,14 +86,6 @@ export class DocumentInfoComponent implements OnInit {
     this.suppressRowClickSelection = visible;
     this.gridColumnApi.setColumnVisible('selector', visible);
     this.gridApi.deselectAll();
-  }
-
-  edit() {
-    if (this.selectedRowIndex != null && this.selectedColumn != null)
-    this.gridApi.startEditingCell({
-      rowIndex: this.selectedRowIndex,
-      colKey: this.selectedColumn
-    });
   }
 
   private refreshGrid(result: Observable<ApiResult>): Promise<void | ApiResult> {

@@ -8,17 +8,17 @@ import { AgGridModule } from '@ag-grid-community/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { TokenService, LayoutComponent, JalaliPipe, ConvertorService } from './infrastructures';
-import { ContractComponent, ContractService, ContractDatasource } from './modules';
 import * as resource from './infrastructures/resource.json'; 
 import { AuthInterceptor } from './infrastructures/utilities/auth-interceptor';
 import { MessageService } from './infrastructures/services/message.service';
 import { DynamicFormBuilderModule } from './infrastructures/lib';
+import { DocumentInfoComponent, DocumentInfoService, DocumentInfoDatasource } from './modules';
 
 
 @NgModule({
   declarations: [
     LayoutComponent,
-    ContractComponent,
+    DocumentInfoComponent,
     JalaliPipe
   ],
   imports: [
@@ -37,8 +37,8 @@ import { DynamicFormBuilderModule } from './infrastructures/lib';
     MessageService,
     TokenService,
     { provide: 'CONTRACT_MANAGEMENT_SERVICE_URL', useFactory: function () { return 'https://localhost:8000/contractmanagement/' }, deps: [] },
-    ContractService,
-    ContractDatasource,
+    DocumentInfoService,
+    DocumentInfoDatasource,
     { provide: 'RESOURCE', useValue: resource, deps: [] }
   ],
   bootstrap: [LayoutComponent]

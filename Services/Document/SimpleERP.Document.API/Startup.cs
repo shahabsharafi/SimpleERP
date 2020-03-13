@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 using SimpleERP.Document.API.Infrastructure.Contracts;
 using SimpleERP.Document.API.Infrastructure.Data;
 using SimpleERP.Document.API.Infrastructure.Repositories;
-using SimpleERP.Infrastructure.Commons;
+using SimpleERP.Libraries.Infrastructure.Commons;
 
 namespace SimpleERP.Document.API
 {

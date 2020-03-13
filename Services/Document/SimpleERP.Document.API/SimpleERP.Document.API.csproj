@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Libraries\SimpleERP.Infrastructure\SimpleERP.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\SimpleERP.Libraries.Infrastructure\SimpleERP.Libraries.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
