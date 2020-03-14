@@ -25,5 +25,9 @@
     </Reference>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="&#xA;xcopy /Y /D &quot;$(TargetDir)*.dll&quot; &quot;$(SolutionDir)\SharedLibrary&quot;" />
+  </Target>
+
 
 </Project>

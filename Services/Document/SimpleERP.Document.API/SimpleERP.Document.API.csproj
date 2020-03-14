@@ -22,8 +22,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Libraries\SimpleERP.Libraries.API\SimpleERP.Libraries.API.csproj" />
-    <ProjectReference Include="..\..\..\Libraries\SimpleERP.Libraries.Infrastructure\SimpleERP.Libraries.Infrastructure.csproj" />
+    <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+      <HintPath>..\..\..\SharedLibrary\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Features">
+      <HintPath>..\..\..\SharedLibrary\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Core">
+      <HintPath>..\..\..\SharedLibrary\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleERP.Infrastructure">
+      <HintPath>..\..\..\SharedLibrary\SimpleERP.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleERP.Libraries.API">
+      <HintPath>..\..\..\SharedLibrary\SimpleERP.Libraries.API.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleERP.Libraries.Infrastructure">
+      <HintPath>..\..\..\SharedLibrary\SimpleERP.Libraries.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>..\..\..\SharedLibrary\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
