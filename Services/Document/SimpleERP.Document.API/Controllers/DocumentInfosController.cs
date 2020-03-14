@@ -58,6 +58,9 @@ namespace SimpleERP.Document.API.Controllers
         public async Task<ActionResult<DocumentInfoModel>> Get(long id, CancellationToken cancellationToken)
         {
             var obj = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
+            await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Issuer, cancellationToken);
+            await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Domain, cancellationToken);
+            await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Type, cancellationToken);
             //var model = this._mapper.Map<ContractModel>(obj);
             var model = new DocumentInfoModel() {
                 Id = obj.Id,
@@ -78,6 +81,27 @@ namespace SimpleERP.Document.API.Controllers
                 TypeTitle = obj.Type.Title
             };
             return Ok(model);
+        }
+
+        [Route("issuers")]
+        [HttpGet]
+        public IQueryable GetAllIssuers()
+        {
+            return this._uor.IssuerRepository.TableNoTracking;
+        }
+
+        [Route("domains")]
+        [HttpGet]
+        public IQueryable GetAllDomains()
+        {
+            return this._uor.DomainRepository.TableNoTracking;
+        }
+
+        [Route("types")]
+        [HttpGet]
+        public IQueryable GetAllTypes()
+        {
+            return this._uor.TypeRepository.TableNoTracking;
         }
 
         // POST api/values

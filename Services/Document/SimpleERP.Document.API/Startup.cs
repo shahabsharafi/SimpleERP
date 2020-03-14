@@ -51,6 +51,9 @@ namespace SimpleERP.Document.API
             services.AddSingleton(Configuration);
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IIssuerRepository, IssuerRepository>();
+            services.AddScoped<IDomainRepository, DomainRepository>();
+            services.AddScoped<ITypeRepository, TypeRepository>();
             services.AddScoped<IDocumentInfoRepository, DocumentInfoRepository>();
             services.AddScoped<IUnitOfRepository, UnitOfRepository>();
             services.AddScoped<IQueryHandler, AgGridQueryHandler>();

@@ -5,7 +5,7 @@ import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService } 
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
 import * as moment from 'jalali-moment';
-import { IDocumentInfoModel, DocumentInfoModel } from '../../models';
+import { IDocumentInfoModel, DocumentInfoModel, ISelectItemModel } from '../../models';
 import { DocumentInfoDatasource, DocumentInfoService } from '../../services/documentinfo'; 
 
 @Component({
@@ -25,6 +25,9 @@ export class DocumentInfoComponent implements OnInit {
   private columnDefs: any[];
   private selectedRowData: IDocumentInfoModel;
   public gridOptions: any = {};
+  public issuerList: ISelectItemModel[];
+  public domainList: ISelectItemModel[];
+  public typeList: ISelectItemModel[];
 
   constructor(private fb: FormBuilder, @Inject('RESOURCE') public resource: any, private documentInfoService: DocumentInfoService, private documentInfoDatasource: DocumentInfoDatasource, private convertorService: ConvertorService) {
     documentInfoDatasource.init(documentInfoService);
@@ -32,8 +35,14 @@ export class DocumentInfoComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
+      no: ['', [Validators.required]],
       subject: ['', [Validators.required]],
-      no: ['', [Validators.required]]
+      dateOfRelease: [],
+      dateOfCreate: [],
+      creator: [],
+      issuerId: [],
+      domainId: [],
+      typeId: []
     });
     this.rowSelection = 'single';
     this.suppressRowClickSelection = false;
@@ -42,9 +51,11 @@ export class DocumentInfoComponent implements OnInit {
     };
     this.columnDefs = [
       { colId: 'selector', hide: true, width: 40, headerName: '', sortable: false, filter: false, checkboxSelection: true },
-      { field: 'id', headerName: this.resource.default.document_id, sortable: true, filter: 'agNumberColumnFilter' },
+      { field: 'no', headerName: this.resource.default.document_no, sortable: true, filter: 'agTextColumnFilter' },
       { field: 'subject', headerName: this.resource.default.document_subject, sortable: true, filter: 'agTextColumnFilter' },
-      { field: 'no', headerName: this.resource.default.document_no, sortable: true, filter: 'agTextColumnFilter' }
+      { field: 'issuerTitle', headerName: this.resource.default.document_issuerTitle, sortable: true, filter: 'agTextColumnFilter' },
+      { field: 'domainTitle', headerName: this.resource.default.document_domainTitle, sortable: true, filter: 'agTextColumnFilter' },
+      { field: 'typeTitle', headerName: this.resource.default.document_typeTitle, sortable: true, filter: 'agTextColumnFilter' }
     ];
     this.gridOptions.rowModelType = 'serverSide';
     this.gridOptions.paginationPageSize = 10;
@@ -59,6 +70,13 @@ export class DocumentInfoComponent implements OnInit {
     this.gridColumnApi = params.columnApi;
     params.api.setServerSideDatasource(this.documentInfoDatasource);
     params.api.sizeColumnsToFit();
+
+    this.documentInfoService.getIssuers().toPromise()
+      .then(response => { this.issuerList = response.data.rows });
+    this.documentInfoService.getDomains().toPromise()
+      .then(response => { this.domainList = response.data.rows });
+    this.documentInfoService.getTypes().toPromise()
+      .then(response => { this.typeList = response.data.rows });
   }
 
   onSelectionChanged(event) {
@@ -69,7 +87,16 @@ export class DocumentInfoComponent implements OnInit {
       if (data && data.id) {
         this.documentInfoService.get(data.id).toPromise().then(response => {
           this.selectedRowData = response.data;
-          this.form.setValue({ "no": response.data.no });
+          this.form.setValue({
+            "no": response.data.no,
+            "subject": response.data.subject,
+            "dateOfRelease": response.data.dateOfRelease,
+            "dateOfCreate": response.data.dateOfCreate,
+            "creator": response.data.creator,
+            "issuerId": response.data.issuerId,
+            "domainId": response.data.domainId,
+            "typeId": response.data.typeId
+          });
         });
       }
     }

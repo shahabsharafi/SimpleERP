@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { IDocumentInfoModel, DocumentInfoModel } from '../../models';
+import { IDocumentInfoModel, DocumentInfoModel, ISelectItemModel, SelectItemModel } from '../../models';
 import { IApiDataResult, ApiResult, ApiDataResult, ApiCollectionResult, ICollection, Collection, QueryString, TokenService } from '../../../../infrastructures';
 import { Observable, of } from 'rxjs';
 import { IGridParams, IGridExcelParams, GridExcelParams, GridService } from '../../../../infrastructures/services/models/grid-parameter';
@@ -32,6 +32,18 @@ export class DocumentInfoService extends GridService {
     return this.rest.get<IApiDataResult<IDocumentInfoModel>>(this._url + '/' + id);
   }
 
+  getIssuers(): Observable<ApiCollectionResult<ISelectItemModel>> {
+    return this.rest.get<ApiCollectionResult<ISelectItemModel>>(this.baseUrl + 'api/documentinfos/issuers');
+  }
+
+  getDomains(): Observable<ApiCollectionResult<ISelectItemModel>> {
+    return this.rest.get<ApiCollectionResult<ISelectItemModel>>(this.baseUrl + 'api/documentinfos/domains');
+  }
+
+  getTypes(): Observable<ApiCollectionResult<ISelectItemModel>> {
+    return this.rest.get<ApiCollectionResult<ISelectItemModel>>(this.baseUrl + 'api/documentinfos/types');
+  }
+
   save(model: IDocumentInfoModel): Observable<IApiDataResult<IDocumentInfoModel>> {
     let result: Observable<IApiDataResult<IDocumentInfoModel>>;
     if (model.id) {
@@ -60,9 +72,13 @@ export class DocumentInfoService extends GridService {
 
 export class DocumentInfoFackService extends DocumentInfoService {
 
-  static DOCUMENT_INFO: IDocumentInfoModel = new DocumentInfoModel(0, "");
+  static DOCUMENT_INFO: IDocumentInfoModel = new DocumentInfoModel(0, "", "", "", "", "", "", "", "", "", 0, "", 0, "", 0, "");
   static DOCUMENT_INFO_ARRAY: IDocumentInfoModel[] = [DocumentInfoFackService.DOCUMENT_INFO];
   static DOCUMENT_INFOS: ICollection<IDocumentInfoModel> = new Collection<IDocumentInfoModel>(DocumentInfoFackService.DOCUMENT_INFO_ARRAY, 1);
+
+  static SELECT_ITEM: ISelectItemModel = new SelectItemModel(0, "");
+  static SELECT_ITEM_ARRAY: ISelectItemModel[] = [DocumentInfoFackService.SELECT_ITEM];
+  static SELECT_ITEMS: ICollection<ISelectItemModel> = new Collection<ISelectItemModel>(DocumentInfoFackService.SELECT_ITEM_ARRAY, 1);
 
   constructor() { super(null, null); }
 
@@ -73,6 +89,20 @@ export class DocumentInfoFackService extends DocumentInfoService {
 
   get(id: number): Observable<IApiDataResult<IDocumentInfoModel>> {
     var obj = new ApiDataResult<IDocumentInfoModel>(true, 200, "", DocumentInfoFackService.DOCUMENT_INFO);
+    return of(obj);
+  }
+  getIssuers(): Observable<ApiCollectionResult<ISelectItemModel>> {
+    var obj = new ApiCollectionResult<ISelectItemModel>(true, 200, "", DocumentInfoFackService.SELECT_ITEMS);
+    return of(obj);
+  }
+
+  getDomains(): Observable<ApiCollectionResult<ISelectItemModel>> {
+    var obj = new ApiCollectionResult<ISelectItemModel>(true, 200, "", DocumentInfoFackService.SELECT_ITEMS);
+    return of(obj);
+  }
+
+  getTypes(): Observable<ApiCollectionResult<ISelectItemModel>> {
+    var obj = new ApiCollectionResult<ISelectItemModel>(true, 200, "", DocumentInfoFackService.SELECT_ITEMS);
     return of(obj);
   }
 

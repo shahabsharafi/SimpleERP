@@ -13,8 +13,9 @@
           </div>
         </div>
         <button type="button" class="btn btn-secondary btn-toollbar"><i class="fa fa-table"></i> {{resource.default.excel}}</button>
+      </div>
     </div>
-    <ag-grid-angular style="width: 450px; height: 300px;"
+    <ag-grid-angular style="width: 550px; height: 350px;"
       enableRtl="true"
       class="ag-theme-balham"
       suppressSizeToFit="true"
@@ -33,19 +34,37 @@
   </div>
   <div class="col-auto">
     <section class="m-4">
-      <!-- Default form register -->
-      <form class="text-center border border-light p-5" (ngSubmit)="saveForm()" [formGroup]="form">
+      <form class="text-left border border-light p-5" (ngSubmit)="saveForm()" [formGroup]="form">
 
-        <p class="h4 mb-4">{{resource.default.document_subject}}</p>
+        <p class="h4 mb-4">{{resource.default.document_form_title}}</p>
 
-        <!-- Username -->
+        <input type="text" id="txtNo" class="form-control mb-4" formControlName="no" placeholder="{{resource.default.document_no}}">
         <input type="text" id="txtSubject" class="form-control mb-4" formControlName="subject" placeholder="{{resource.default.document_subject}}">
-
-        <!-- Sign in button -->
+        <input type="text" id="txtDateOfRelease" class="form-control mb-4" formControlName="dateOfRelease" placeholder="{{resource.default.document_dateOfRelease}}">
+        <input type="text" id="txtDateOfCreate" class="form-control mb-4" formControlName="dateOfCreate" placeholder="{{resource.default.document_dateOfCreate}}">
+        <input type="text" id="txtCreator" class="form-control mb-4" formControlName="creator" placeholder="{{resource.default.document_creator}}">
+        <select class="form-control mb-4" formControlName="issuerId">
+          <option [ngValue]="null" disabled>{{resource.default.document_issuer}}</option>
+          <option *ngFor="let r of issuerList" [value]="r.id">
+            {{r.title}}
+          </option>
+        </select>
+        <select class="form-control mb-4" formControlName="domainId">
+          <option [ngValue]="null" disabled>{{resource.default.document_domain}}</option>
+          <option *ngFor="let r of domainList" [value]="r.id">
+            {{r.title}}
+          </option>
+        </select>
+        <select class="form-control mb-4" formControlName="typeId">
+          <option [ngValue]="null" disabled>{{resource.default.document_type}}</option>
+          <option *ngFor="let r of typeList" [value]="r.id">
+            {{r.title}}
+          </option>
+        </select>
+        <!-- Save in button -->
         <button class="btn btn-info btn-block my-4" type="submit">{{resource.default.save}}</button>
 
       </form>
-      <!-- Default form register -->
     </section>
 
   </div>

@@ -13,11 +13,23 @@ namespace SimpleERP.Document.API.Infrastructure.Repositories
     {
         private ApplicationDbContext _dbContext;
         private IDocumentInfoRepository _documentInfoRepository;
+        private IIssuerRepository _issuerRepository;
+        private IDomainRepository _domainRepository;
+        private ITypeRepository _typeRepository;
 
-        public UnitOfRepository(ApplicationDbContext context, IDocumentInfoRepository documentInfoRepository)
+        public UnitOfRepository(
+            ApplicationDbContext context, 
+            IDocumentInfoRepository documentInfoRepository, 
+            IIssuerRepository issuerRepository,
+            IDomainRepository domainRepository,
+            ITypeRepository typeRepository
+        )
         {
             this._dbContext = context;
             this._documentInfoRepository = documentInfoRepository;
+            this._issuerRepository = issuerRepository;
+            this._domainRepository = domainRepository;
+            this._typeRepository = typeRepository;
         }
         
         public IDocumentInfoRepository DocumentInfoRepository
@@ -30,6 +42,45 @@ namespace SimpleERP.Document.API.Infrastructure.Repositories
                 }
 
                 return _documentInfoRepository;
+            }
+        }
+
+        public IIssuerRepository IssuerRepository
+        {
+            get
+            {
+                if (_issuerRepository == null)
+                {
+                    _issuerRepository = new IssuerRepository(_dbContext);
+                }
+
+                return _issuerRepository;
+            }
+        }
+
+        public IDomainRepository DomainRepository
+        {
+            get
+            {
+                if (_domainRepository == null)
+                {
+                    _domainRepository = new DomainRepository(_dbContext);
+                }
+
+                return _domainRepository;
+            }
+        }
+
+        public ITypeRepository TypeRepository
+        {
+            get
+            {
+                if (_typeRepository == null)
+                {
+                    _typeRepository = new TypeRepository(_dbContext);
+                }
+
+                return _typeRepository;
             }
         }
 
