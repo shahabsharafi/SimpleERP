@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
-import { IDocumentInfoModel, DocumentInfoModel, ISelectItemModel, SelectItemModel } from '../../models';
-import { IApiDataResult, ApiResult, ApiDataResult, ApiCollectionResult, ICollection, Collection, QueryString, TokenService } from '../../../../infrastructures';
+import { IDocumentInfoModel, DocumentInfoModel, ISelectItemModel, SelectItemModel, IFileModel } from '../../models';
+import { IApiDataResult, ApiResult, ApiDataResult, ApiCollectionResult, ICollection, Collection, QueryString, TokenService, IApiResult } from '../../../../infrastructures';
 import { Observable, of } from 'rxjs';
 import { IGridParams, IGridExcelParams, GridExcelParams, GridService } from '../../../../infrastructures/services/models/grid-parameter';
 
@@ -44,13 +44,16 @@ export class DocumentInfoService extends GridService {
     return this.rest.get<ApiCollectionResult<ISelectItemModel>>(this.baseUrl + 'api/documentinfos/types');
   }
 
-  save(model: IDocumentInfoModel): Observable<IApiDataResult<IDocumentInfoModel>> {
+  save(model: IDocumentInfoModel, file: File): Observable<IApiDataResult<IDocumentInfoModel>> {
     let result: Observable<IApiDataResult<IDocumentInfoModel>>;
+    let formData: FormData = new FormData();
+    formData.append('file', file);
+    formData.append('modelJson', JSON.stringify(model));
     if (model.id) {
-      result = this.rest.put<IApiDataResult<IDocumentInfoModel>>(this._url + '/' + model.id, model);
+      result = this.rest.put<IApiDataResult<IDocumentInfoModel>>(this._url + '/' + model.id, formData);
     } else {
       model.no = Math.floor(Math.random() * 1000) + '';
-      result = this.rest.post<IApiDataResult<IDocumentInfoModel>>(this._url, model);
+      result = this.rest.post<IApiDataResult<IDocumentInfoModel>>(this._url, formData);
     }
     return result;
   }

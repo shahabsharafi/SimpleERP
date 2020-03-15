@@ -13,7 +13,7 @@ import { AuthInterceptor } from './infrastructures/utilities/auth-interceptor';
 import { MessageService } from './infrastructures/services/message.service';
 import { DynamicFormBuilderModule } from './infrastructures/lib';
 import { DocumentInfoComponent, DocumentInfoService, DocumentInfoDatasource } from './modules';
-import { DpDatePickerModule } from 'ng2-jalali-date-picker';
+import { DpDatePickerModule } from 'ng2-jalali-date-picker'
 
 
 @NgModule({

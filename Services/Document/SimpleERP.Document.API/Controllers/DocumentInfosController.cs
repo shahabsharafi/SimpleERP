@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SimpleERP.Document.API.Infrastructure.Contracts;
 using SimpleERP.Document.API.Infrastructure.Data;
 using SimpleERP.Document.API.Infrastructure.Models;
@@ -23,11 +27,13 @@ namespace SimpleERP.Document.API.Controllers
     {
         private readonly IUnitOfRepository _uor;
         private readonly IMapper _mapper;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public DocumentInfosController(IUnitOfRepository uor, IMapper mapper)
+        public DocumentInfosController(IUnitOfRepository uor, IMapper mapper, IHostingEnvironment environment)
         {
             this._uor = uor;
             this._mapper = mapper;
+            this._hostingEnvironment = environment;
         }
 
         [HttpGet]
@@ -35,25 +41,6 @@ namespace SimpleERP.Document.API.Controllers
         {
             var list = this._uor.DocumentInfoRepository.TableNoTracking;
             var rows = list.Select(obj => this._mapper.Map<DocumentInfoModel>(obj)).OrderByDescending(o => o.Id);
-            //var rows = list.Select(obj => new DocumentInfoModel()
-            //{
-            //    Id = obj.Id,
-            //    No = obj.No,
-            //    Subject = obj.Subject,
-            //    Text = obj.Text,
-            //    FilePath = obj.FilePath,
-            //    DateOfRelease = obj.DateOfRelease,
-            //    Creator = obj.Creator,
-            //    DateOfCreate = obj.DateOfCreate,
-            //    Modifier = obj.Modifier,
-            //    DateOfModify = obj.DateOfModify,
-            //    DomainId = obj.DomainId,
-            //    DomainTitle = obj.Domain.Title,
-            //    IssuerId = obj.IssuerId,
-            //    IssuerTitle = obj.Issuer.Title,
-            //    TypeId = obj.TypeId,
-            //    TypeTitle = obj.Type.Title
-            //}).OrderByDescending(o => o.Id);
             return rows;
         }
 
@@ -66,24 +53,9 @@ namespace SimpleERP.Document.API.Controllers
             await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Domain, cancellationToken);
             await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Type, cancellationToken);
             var model = this._mapper.Map<DocumentInfoModel>(obj);
-            //var model = new DocumentInfoModel() {
-            //    Id = obj.Id,
-            //    No = obj.No,
-            //    Subject = obj.Subject,
-            //    Text = obj.Text,
-            //    FilePath = obj.FilePath,
-            //    DateOfRelease = obj.DateOfRelease,
-            //    Creator = obj.Creator,
-            //    DateOfCreate = obj.DateOfCreate,
-            //    Modifier = obj.Modifier,
-            //    DateOfModify = obj.DateOfModify,
-            //    DomainId = obj.DomainId,
-            //    DomainTitle = obj.Domain.Title,
-            //    IssuerId = obj.IssuerId,
-            //    IssuerTitle = obj.Issuer.Title,
-            //    TypeId = obj.TypeId,
-            //    TypeTitle = obj.Type.Title
-            //};
+            model.IssuerTitle = obj.Issuer.Title;
+            model.DomainTitle = obj.Domain.Title;
+            model.TypeTitle = obj.Type.Title;
             return Ok(model);
         }
 
@@ -108,27 +80,51 @@ namespace SimpleERP.Document.API.Controllers
             return this._uor.TypeRepository.TableNoTracking;
         }
 
+        private async Task<string> UploadFile(IFormFile file)
+        {
+            string filePath = null;
+            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+            if (file.Length > 0)
+            {
+                filePath = Path.Combine(uploads, file.FileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+            }
+            return filePath;
+        }
+
         // POST api/values
         [HttpPost]
-        public async Task<ActionResult<DocumentInfoModel>> Post([FromBody] DocumentInfoModel model, CancellationToken cancellationToken)
+        public async Task<ActionResult<DocumentInfoModel>> Post([FromForm] string modelJson, [FromForm] IFormFile file, CancellationToken cancellationToken)
         {
-            //var entity = this._mapper.Map<Contract>(model);
-            DocumentInfo entity = this._mapper.Map<DocumentInfo>(model);// new DocumentInfo() { No = model.No };
+            DocumentInfoModel model = JsonConvert.DeserializeObject<DocumentInfoModel>(modelJson);
+            DocumentInfo entity = this._mapper.Map<DocumentInfo>(model);
+            string filePath = await UploadFile(file); ;
+            if (filePath != null)
+            {
+                entity.FilePath = filePath;
+            }
             await this._uor.DocumentInfoRepository.AddAsync(entity, cancellationToken);
-            var newModel = this._mapper.Map<DocumentInfoModel>(entity);// new DocumentInfoModel() { Id = entity.Id, No = entity.No };
+            var newModel = this._mapper.Map<DocumentInfoModel>(entity);
             return Ok(newModel);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<DocumentInfoModel>> Put(long id, [FromBody] DocumentInfoModel model, CancellationToken cancellationToken)
+        public async Task<ActionResult<DocumentInfoModel>> Put(long id, [FromForm] string modelJson, [FromForm] IFormFile file, CancellationToken cancellationToken)
         {
+            DocumentInfoModel model = JsonConvert.DeserializeObject<DocumentInfoModel>(modelJson);
             var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
             this._mapper.Map(model, entity);
-            //entity.No = model.No;
-
+            string filePath = await UploadFile(file); ;
+            if (filePath != null)
+            {
+                entity.FilePath = filePath;
+            }
             await this._uor.DocumentInfoRepository.UpdateAsync(entity, cancellationToken);
-            var newModel = this._mapper.Map<DocumentInfoModel>(entity);//new DocumentInfoModel() { Id = entity.Id, No = entity.No };
+            var newModel = this._mapper.Map<DocumentInfoModel>(entity);
             return Ok(newModel);
         }
 

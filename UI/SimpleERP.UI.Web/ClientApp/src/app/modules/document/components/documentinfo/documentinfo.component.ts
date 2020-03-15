@@ -28,6 +28,7 @@ export class DocumentInfoComponent implements OnInit {
   public issuerList: ISelectItemModel[];
   public domainList: ISelectItemModel[];
   public typeList: ISelectItemModel[];
+  fileToUpload: File = null;
 
   constructor(private fb: FormBuilder, @Inject('RESOURCE') public resource: any, private documentInfoService: DocumentInfoService, private documentInfoDatasource: DocumentInfoDatasource, private convertorService: ConvertorService) {
     documentInfoDatasource.init(documentInfoService);
@@ -128,12 +129,16 @@ export class DocumentInfoComponent implements OnInit {
     });
   }
 
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+  }
+
   save() {
     const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
     model.id = this.selectedRowData.id || null;
     model.dateOfCreate = ConvertDate.toGeregorian(model.dateOfCreate);
-    model.dateOfRelease = ConvertDate.toGeregorian(model.dateOfRelease);
-    const result = this.documentInfoService.save(model);
+    model.dateOfRelease = ConvertDate.toGeregorian(model.dateOfRelease);    
+    const result = this.documentInfoService.save(model, this.fileToUpload);
     this.refreshGrid(result);
   }
 

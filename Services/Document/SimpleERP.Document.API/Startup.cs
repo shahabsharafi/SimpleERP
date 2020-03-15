@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -36,6 +37,11 @@ namespace SimpleERP.Document.API
                    .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+
+            if (string.IsNullOrWhiteSpace(env.WebRootPath))
+            {
+                env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
         }
 
 
@@ -43,7 +49,7 @@ namespace SimpleERP.Document.API
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
+        {            
             services.AddDbContext<ApplicationDbContext>(options => options
                 .UseMySql(Configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly("SimpleERP.Document.API")

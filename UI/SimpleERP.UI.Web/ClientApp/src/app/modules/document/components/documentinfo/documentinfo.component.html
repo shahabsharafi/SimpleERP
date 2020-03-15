@@ -40,7 +40,7 @@
 
         <input type="text" id="txtNo" class="form-control mb-4" formControlName="no" placeholder="{{resource.default.document_no}}">
         <input type="text" id="txtSubject" class="form-control mb-4" formControlName="subject" placeholder="{{resource.default.document_subject}}">
-        <input [dpDayPicker]="config" theme="dp-material" id="txtDateOfRelease" class="form-control" formControlName="dateOfRelease" placeholder="{{resource.default.document_dateOfRelease}}"/>
+        <input [dpDayPicker]="config" theme="dp-material" id="txtDateOfRelease" class="form-control" formControlName="dateOfRelease" placeholder="{{resource.default.document_dateOfRelease}}" />
         <input [dpDayPicker]="config" theme="dp-material" id="txtDateOfCreate" class="form-control" formControlName="dateOfCreate" placeholder="{{resource.default.document_dateOfCreate}}">
         <input type="text" id="txtCreator" class="form-control mb-4" formControlName="creator" placeholder="{{resource.default.document_creator}}">
         <select class="form-control mb-4" formControlName="issuerId">
@@ -61,6 +61,12 @@
             {{r.title}}
           </option>
         </select>
+        <div class="form-group">
+          <label for="file">Choose File</label>
+          <input type="file"
+                 id="file"
+                 (change)="handleFileInput($event.target.files)">
+        </div>
         <!-- Save in button -->
         <button class="btn btn-info btn-block my-4" type="submit">{{resource.default.save}}</button>
 
