@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SimpleERP.Document.API.Infrastructure.Model
+namespace SimpleERP.Document.API.Infrastructure.Models
 {
     public class DocumentInfoModel
     {

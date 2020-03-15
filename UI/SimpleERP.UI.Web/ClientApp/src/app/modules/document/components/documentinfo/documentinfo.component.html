@@ -34,14 +34,14 @@
   </div>
   <div class="col-auto">
     <section class="m-4">
-      <form class="text-left border border-light p-5" (ngSubmit)="saveForm()" [formGroup]="form">
+      <form class="text-left border border-light p-5" (ngSubmit)="save()" [formGroup]="form">
 
         <p class="h4 mb-4">{{resource.default.document_form_title}}</p>
 
         <input type="text" id="txtNo" class="form-control mb-4" formControlName="no" placeholder="{{resource.default.document_no}}">
         <input type="text" id="txtSubject" class="form-control mb-4" formControlName="subject" placeholder="{{resource.default.document_subject}}">
-        <input type="text" id="txtDateOfRelease" class="form-control mb-4" formControlName="dateOfRelease" placeholder="{{resource.default.document_dateOfRelease}}">
-        <input type="text" id="txtDateOfCreate" class="form-control mb-4" formControlName="dateOfCreate" placeholder="{{resource.default.document_dateOfCreate}}">
+        <input [dpDayPicker]="config" theme="dp-material" id="txtDateOfRelease" class="form-control" formControlName="dateOfRelease" placeholder="{{resource.default.document_dateOfRelease}}"/>
+        <input [dpDayPicker]="config" theme="dp-material" id="txtDateOfCreate" class="form-control" formControlName="dateOfCreate" placeholder="{{resource.default.document_dateOfCreate}}">
         <input type="text" id="txtCreator" class="form-control mb-4" formControlName="creator" placeholder="{{resource.default.document_creator}}">
         <select class="form-control mb-4" formControlName="issuerId">
           <option [ngValue]="null" disabled>{{resource.default.document_issuer}}</option>

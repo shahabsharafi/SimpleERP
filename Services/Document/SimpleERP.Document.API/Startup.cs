@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -61,6 +62,8 @@ namespace SimpleERP.Document.API
             services.AddScoped<IExcelHelper, ExcelHelper>();
 
             services.AddCors();
+            
+            services.AddAutoMapper(typeof(Startup).Assembly);
 
             services.AddMvc(options =>
             {

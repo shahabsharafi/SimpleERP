@@ -1,12 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TextFilter, SimpleFilter, AllModules, Module  } from '@ag-grid-enterprise/all-modules';
-import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService } from '../../../../infrastructures';
+import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService, ConvertDate } from '../../../../infrastructures';
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
 import * as moment from 'jalali-moment';
 import { IDocumentInfoModel, DocumentInfoModel, ISelectItemModel } from '../../models';
-import { DocumentInfoDatasource, DocumentInfoService } from '../../services/documentinfo'; 
+import { DocumentInfoDatasource, DocumentInfoService } from '../../services/documentinfo';
 
 @Component({
   templateUrl: './documentinfo.component.html',
@@ -85,13 +85,13 @@ export class DocumentInfoComponent implements OnInit {
     if (nodes && nodes.length) {
       const data: (IDocumentInfoModel | null) = (nodes[0]).data;
       if (data && data.id) {
-        this.documentInfoService.get(data.id).toPromise().then(response => {
+        this.documentInfoService.get(data.id).toPromise().then(response => {          
           this.selectedRowData = response.data;
           this.form.setValue({
             "no": response.data.no,
             "subject": response.data.subject,
-            "dateOfRelease": response.data.dateOfRelease,
-            "dateOfCreate": response.data.dateOfCreate,
+            "dateOfRelease": ConvertDate.toJalali(response.data.dateOfRelease),
+            "dateOfCreate": ConvertDate.toJalali(response.data.dateOfCreate),
             "creator": response.data.creator,
             "issuerId": response.data.issuerId,
             "domainId": response.data.domainId,
@@ -128,9 +128,11 @@ export class DocumentInfoComponent implements OnInit {
     });
   }
 
-  saveForm() {
+  save() {
     const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
     model.id = this.selectedRowData.id || null;
+    model.dateOfCreate = ConvertDate.toGeregorian(model.dateOfCreate);
+    model.dateOfRelease = ConvertDate.toGeregorian(model.dateOfRelease);
     const result = this.documentInfoService.save(model);
     this.refreshGrid(result);
   }

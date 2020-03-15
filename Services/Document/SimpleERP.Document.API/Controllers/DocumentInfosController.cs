@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleERP.Document.API.Infrastructure.Contracts;
 using SimpleERP.Document.API.Infrastructure.Data;
-using SimpleERP.Document.API.Infrastructure.Model;
+using SimpleERP.Document.API.Infrastructure.Models;
 using SimpleERP.Libraries.Infrastructure.Excel;
 using SimpleERP.Libraries.Infrastructure.QueryHandler;
 
@@ -20,36 +21,39 @@ namespace SimpleERP.Document.API.Controllers
     [ApiController]
     public class DocumentInfosController : ControllerBase, IQuerybleController
     {
-        IUnitOfRepository _uor;
+        private readonly IUnitOfRepository _uor;
+        private readonly IMapper _mapper;
 
-        public DocumentInfosController(IUnitOfRepository uor)
+        public DocumentInfosController(IUnitOfRepository uor, IMapper mapper)
         {
             this._uor = uor;
+            this._mapper = mapper;
         }
 
         [HttpGet]
         public IQueryable Get()
         {
             var list = this._uor.DocumentInfoRepository.TableNoTracking;
-            var rows = list.Select(obj => new DocumentInfoModel()
-            {
-                Id = obj.Id,
-                No = obj.No,
-                Subject = obj.Subject,
-                Text = obj.Text,
-                FilePath = obj.FilePath,
-                DateOfRelease = obj.DateOfRelease,
-                Creator = obj.Creator,
-                DateOfCreate = obj.DateOfCreate,
-                Modifier = obj.Modifier,
-                DateOfModify = obj.DateOfModify,
-                DomainId = obj.DomainId,
-                DomainTitle = obj.Domain.Title,
-                IssuerId = obj.IssuerId,
-                IssuerTitle = obj.Issuer.Title,
-                TypeId = obj.TypeId,
-                TypeTitle = obj.Type.Title
-            }).OrderByDescending(o => o.Id);
+            var rows = list.Select(obj => this._mapper.Map<DocumentInfoModel>(obj)).OrderByDescending(o => o.Id);
+            //var rows = list.Select(obj => new DocumentInfoModel()
+            //{
+            //    Id = obj.Id,
+            //    No = obj.No,
+            //    Subject = obj.Subject,
+            //    Text = obj.Text,
+            //    FilePath = obj.FilePath,
+            //    DateOfRelease = obj.DateOfRelease,
+            //    Creator = obj.Creator,
+            //    DateOfCreate = obj.DateOfCreate,
+            //    Modifier = obj.Modifier,
+            //    DateOfModify = obj.DateOfModify,
+            //    DomainId = obj.DomainId,
+            //    DomainTitle = obj.Domain.Title,
+            //    IssuerId = obj.IssuerId,
+            //    IssuerTitle = obj.Issuer.Title,
+            //    TypeId = obj.TypeId,
+            //    TypeTitle = obj.Type.Title
+            //}).OrderByDescending(o => o.Id);
             return rows;
         }
 
@@ -61,25 +65,25 @@ namespace SimpleERP.Document.API.Controllers
             await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Issuer, cancellationToken);
             await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Domain, cancellationToken);
             await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Type, cancellationToken);
-            //var model = this._mapper.Map<ContractModel>(obj);
-            var model = new DocumentInfoModel() {
-                Id = obj.Id,
-                No = obj.No,
-                Subject = obj.Subject,
-                Text = obj.Text,
-                FilePath = obj.FilePath,
-                DateOfRelease = obj.DateOfRelease,
-                Creator = obj.Creator,
-                DateOfCreate = obj.DateOfCreate,
-                Modifier = obj.Modifier,
-                DateOfModify = obj.DateOfModify,
-                DomainId = obj.DomainId,
-                DomainTitle = obj.Domain.Title,
-                IssuerId = obj.IssuerId,
-                IssuerTitle = obj.Issuer.Title,
-                TypeId = obj.TypeId,
-                TypeTitle = obj.Type.Title
-            };
+            var model = this._mapper.Map<DocumentInfoModel>(obj);
+            //var model = new DocumentInfoModel() {
+            //    Id = obj.Id,
+            //    No = obj.No,
+            //    Subject = obj.Subject,
+            //    Text = obj.Text,
+            //    FilePath = obj.FilePath,
+            //    DateOfRelease = obj.DateOfRelease,
+            //    Creator = obj.Creator,
+            //    DateOfCreate = obj.DateOfCreate,
+            //    Modifier = obj.Modifier,
+            //    DateOfModify = obj.DateOfModify,
+            //    DomainId = obj.DomainId,
+            //    DomainTitle = obj.Domain.Title,
+            //    IssuerId = obj.IssuerId,
+            //    IssuerTitle = obj.Issuer.Title,
+            //    TypeId = obj.TypeId,
+            //    TypeTitle = obj.Type.Title
+            //};
             return Ok(model);
         }
 
@@ -109,9 +113,9 @@ namespace SimpleERP.Document.API.Controllers
         public async Task<ActionResult<DocumentInfoModel>> Post([FromBody] DocumentInfoModel model, CancellationToken cancellationToken)
         {
             //var entity = this._mapper.Map<Contract>(model);
-            DocumentInfo entity = new DocumentInfo() { No = model.No };
+            DocumentInfo entity = this._mapper.Map<DocumentInfo>(model);// new DocumentInfo() { No = model.No };
             await this._uor.DocumentInfoRepository.AddAsync(entity, cancellationToken);
-            var newModel = new DocumentInfoModel() { Id = entity.Id, No = entity.No };
+            var newModel = this._mapper.Map<DocumentInfoModel>(entity);// new DocumentInfoModel() { Id = entity.Id, No = entity.No };
             return Ok(newModel);
         }
 
@@ -120,11 +124,11 @@ namespace SimpleERP.Document.API.Controllers
         public async Task<ActionResult<DocumentInfoModel>> Put(long id, [FromBody] DocumentInfoModel model, CancellationToken cancellationToken)
         {
             var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
-            //this._mapper.Map(model, entity);
-            entity.No = model.No;
+            this._mapper.Map(model, entity);
+            //entity.No = model.No;
 
             await this._uor.DocumentInfoRepository.UpdateAsync(entity, cancellationToken);
-            var newModel = new DocumentInfoModel() { Id = entity.Id, No = entity.No };
+            var newModel = this._mapper.Map<DocumentInfoModel>(entity);//new DocumentInfoModel() { Id = entity.Id, No = entity.No };
             return Ok(newModel);
         }
 

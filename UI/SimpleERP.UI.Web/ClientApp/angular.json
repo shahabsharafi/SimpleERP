@@ -24,10 +24,6 @@
             "styles": [
               "src/styles.scss",
 
-              "node_modules/bpmn-js/dist/assets/diagram-js.css",
-              "node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css",
-              "node_modules/bpmn-js-properties-panel/styles/properties.less",
-
               "node_modules/@ag-grid-enterprise/all-modules/dist/styles/ag-grid.css",
               "node_modules/@ag-grid-enterprise/all-modules/dist/styles/ag-theme-balham.css"
             ],
