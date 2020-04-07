@@ -211,17 +211,17 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
             modelBuilder.Entity("SimpleERP.Document.API.Infrastructure.Data.DocumentInfo", b =>
                 {
                     b.HasOne("SimpleERP.Document.API.Infrastructure.Data.Domain", "Domain")
-                        .WithMany()
+                        .WithMany("DocumentInfos")
                         .HasForeignKey("DomainId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SimpleERP.Document.API.Infrastructure.Data.Issuer", "Issuer")
-                        .WithMany()
+                        .WithMany("DocumentInfos")
                         .HasForeignKey("IssuerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SimpleERP.Document.API.Infrastructure.Data.Type", "Type")
-                        .WithMany()
+                        .WithMany("DocumentInfos")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

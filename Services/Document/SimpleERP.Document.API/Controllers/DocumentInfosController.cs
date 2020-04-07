@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SimpleERP.Document.API.Infrastructure.Contracts;
 using SimpleERP.Document.API.Infrastructure.Data;
@@ -39,9 +40,13 @@ namespace SimpleERP.Document.API.Controllers
         [HttpGet]
         public IQueryable Get()
         {
-            var list = this._uor.DocumentInfoRepository.TableNoTracking;
-            var rows = list.Select(obj => this._mapper.Map<DocumentInfoModel>(obj)).OrderByDescending(o => o.Id);
-            return rows;
+            var q = from obj in this._uor.DocumentInfoRepository.Table
+                    .Include(o => o.Issuer)
+                    .Include(o => o.Domain)
+                    .Include(o => o.Type)
+                    orderby obj.Id
+                    select this._mapper.Map<DocumentInfoModel>(obj);
+            return q;
         }
 
         // GET api/values/5
@@ -53,9 +58,6 @@ namespace SimpleERP.Document.API.Controllers
             await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Domain, cancellationToken);
             await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Type, cancellationToken);
             var model = this._mapper.Map<DocumentInfoModel>(obj);
-            model.IssuerTitle = obj.Issuer.Title;
-            model.DomainTitle = obj.Domain.Title;
-            model.TypeTitle = obj.Type.Title;
             return Ok(model);
         }
 

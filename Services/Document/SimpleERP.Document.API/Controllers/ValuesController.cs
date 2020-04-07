@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SimpleERP.Document.API.Infrastructure.Contracts;
 using SimpleERP.Document.API.Infrastructure.Data;
+using SimpleERP.Document.API.Infrastructure.Models;
 
 namespace SimpleERP.Document.API.Controllers
 {
@@ -11,18 +15,24 @@ namespace SimpleERP.Document.API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        ApplicationDbContext _context;
-        public ValuesController(ApplicationDbContext context)
+        private readonly IUnitOfRepository _uor;
+        private readonly IMapper _mapper;
+
+        public ValuesController(IUnitOfRepository uor, IMapper mapper)
         {
-            _context = context;
+            this._uor = uor;
+            this._mapper = mapper;
         }
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            var entities = _context.Set<Issuer>();
-            var obj = entities.FirstOrDefault();
-            return new string[] { "value1", "value2" };
+            var q = from obj in this._uor.DocumentInfoRepository.Table
+                    .Include(o => o.Issuer)
+                    .Include(o => o.Domain)
+                    .Include(o => o.Type)
+                    select this._mapper.Map<DocumentInfoModel>(obj);
+            return new string[] { q.FirstOrDefault().IssuerTitle };
         }
 
         // GET api/values/5

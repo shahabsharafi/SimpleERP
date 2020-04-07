@@ -178,6 +178,9 @@ $ docker exec -it db mysql -u root -p
 $ Enter password: my-secret-pw
 $ mysql> show databases;
 
+Install dotnet ef tool 
+$ dotnet tool install --global dotnet-ef --version 3.0.0
+
 management tool for mysql
 $ docker pull phpmyadmin/phpmyadmin
 $ docker run --name myadmin -d --link db:db -p 8080:80 phpmyadmin/phpmyadmin

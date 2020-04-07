@@ -12,5 +12,6 @@ namespace SimpleERP.Document.API.Infrastructure.Data
         public string Title { get; set; }
         public bool Readonly { get; set; }
         public bool Hidden { get; set; }
+        public ICollection<DocumentInfo> DocumentInfos { get; set; }
     }
 }

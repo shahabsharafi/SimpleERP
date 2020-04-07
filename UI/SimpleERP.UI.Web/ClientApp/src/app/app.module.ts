@@ -38,7 +38,8 @@ import { DpDatePickerModule } from 'ng2-jalali-date-picker'
     ConvertorService,
     MessageService,
     TokenService,
-    { provide: 'CONTRACT_MANAGEMENT_SERVICE_URL', useFactory: function () { return 'http://localhost:8000/' }, deps: [] },
+    //{ provide: 'CONTRACT_MANAGEMENT_SERVICE_URL', useFactory: function () { return 'http://localhost:8000/' }, deps: [] },
+    { provide: 'CONTRACT_MANAGEMENT_SERVICE_URL', useFactory: function () { return 'http://localhost:4685/' }, deps: [] },
     DocumentInfoService,
     DocumentInfoDatasource,
     { provide: 'RESOURCE', useValue: resource, deps: [] }
