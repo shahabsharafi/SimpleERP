@@ -145,29 +145,7 @@ namespace SimpleERP.Document.API.Controllers
             return this._uor.DocumentInfoRepository.Table;
         }
 
-        [NonAction]
-        public async Task<ActionResult> DeleteFromQueryAsync(IQueryable query, CancellationToken cancellationToken = default)
-        {
-            //this model get from GetQury method 
-            if (query is IQueryable<DocumentInfo> q)
-            {
-                var list = q.ToList();
-                await this._uor.DocumentInfoRepository.DeleteRangeAsync(list, cancellationToken);
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        [NonAction]
-        public async Task<ActionResult> DeleteByIdAsync(string[] ids, CancellationToken cancellationToken = default)
-        {
-            var list = this._uor.DocumentInfoRepository.Table.Where(o => ids.Contains(o.Id.ToString())).ToList();
-            await this._uor.DocumentInfoRepository.DeleteRangeAsync(list, cancellationToken);
-            return Ok();
-        }
+       
 
         [NonAction]
         public void CreateExcel(IQueryable query, IExcelHelper excelHelper)

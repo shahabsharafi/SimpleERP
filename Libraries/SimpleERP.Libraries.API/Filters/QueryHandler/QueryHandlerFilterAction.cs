@@ -30,22 +30,22 @@ namespace SimpleERP.Libraries.API.Filters
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ModelState.IsValid) return;
-            if (context.HttpContext.Request.Method.ToUpper() == "DELETE" &&
-                context.Controller is IQuerybleController controller)
-            {
-                var args = context.HttpContext.Request.Query;
-                if (this._queryHandler.HasFilter(args))
-                {
-                    var query = controller.GetQuery();
-                    query = this._queryHandler.ApplyQuery(query, args);
-                    controller.DeleteFromQueryAsync(query);
-                }
-                else if (this._queryHandler.HasIds(args))
-                {
-                    var ids = this._queryHandler.GetIds(args);
-                    controller.DeleteByIdAsync(ids);
-                }
-            }
+            //if (context.HttpContext.Request.Method.ToUpper() == "DELETE" &&
+            //    context.Controller is IQuerybleController controller)
+            //{
+            //    var args = context.HttpContext.Request.Query;
+            //    if (this._queryHandler.HasFilter(args))
+            //    {
+            //        var query = controller.GetQuery();
+            //        query = this._queryHandler.ApplyQuery(query, args);
+            //        controller.DeleteFromQueryAsync(query);
+            //    }
+            //    else if (this._queryHandler.HasIds(args))
+            //    {
+            //        var ids = this._queryHandler.GetIds(args);
+            //        controller.DeleteByIdAsync(ids);
+            //    }
+            //}
             base.OnActionExecuting(context);
         }
 

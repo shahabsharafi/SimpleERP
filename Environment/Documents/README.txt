@@ -207,3 +207,10 @@ https://medium.com/@Likhitd/asp-net-core-and-mysql-with-docker-part-3-e3827e006e
 dockerize project
 
 https://medium.com/@Likhitd/asp-net-core-and-mysql-with-docker-part-1-b7ef538ecd8e
+
+/************************************************************/
+EPERM: Operation not permitted - NPM Angular 7 on IIS with backend .Net Core 2.1
+https://stackoverflow.com/questions/56234007/eperm-operation-not-permitted-npm-angular-7-on-iis-with-backend-net-core-2-1
+What helped is 
+creating "npm" folder in C:\Windows\System32\config\systemprofile\AppData\Roaming 
+and assigning read permission for the folder to IIS_USR group.

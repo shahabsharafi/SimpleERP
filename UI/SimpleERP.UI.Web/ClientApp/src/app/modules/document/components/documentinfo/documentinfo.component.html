@@ -37,35 +37,56 @@
       <form class="text-left border border-light p-5" (ngSubmit)="save()" [formGroup]="form">
 
         <p class="h4 mb-4">{{resource.default.document_form_title}}</p>
-
-        <input type="text" id="txtNo" class="form-control mb-4" formControlName="no" placeholder="{{resource.default.document_no}}">
-        <input type="text" id="txtSubject" class="form-control mb-4" formControlName="subject" placeholder="{{resource.default.document_subject}}">
-        <input [dpDayPicker]="config" theme="dp-material" id="txtDateOfRelease" class="form-control" formControlName="dateOfRelease" placeholder="{{resource.default.document_dateOfRelease}}" />
-        <input [dpDayPicker]="config" theme="dp-material" id="txtDateOfCreate" class="form-control" formControlName="dateOfCreate" placeholder="{{resource.default.document_dateOfCreate}}">
-        <input type="text" id="txtCreator" class="form-control mb-4" formControlName="creator" placeholder="{{resource.default.document_creator}}">
-        <select class="form-control mb-4" formControlName="issuerId">
-          <option [ngValue]="null" disabled>{{resource.default.document_issuer}}</option>
-          <option *ngFor="let r of issuerList" [value]="r.id">
-            {{r.title}}
-          </option>
-        </select>
-        <select class="form-control mb-4" formControlName="domainId">
-          <option [ngValue]="null" disabled>{{resource.default.document_domain}}</option>
-          <option *ngFor="let r of domainList" [value]="r.id">
-            {{r.title}}
-          </option>
-        </select>
-        <select class="form-control mb-4" formControlName="typeId">
-          <option [ngValue]="null" disabled>{{resource.default.document_type}}</option>
-          <option *ngFor="let r of typeList" [value]="r.id">
-            {{r.title}}
-          </option>
-        </select>
         <div class="form-group">
-          <label for="file">Choose File</label>
-          <input type="file"
-                 id="file"
-                 (change)="handleFileInput($event.target.files)">
+          <label for="txtNo">{{resource.default.document_no}}</label>
+          <input type="text" id="txtNo" class="form-control" formControlName="no" placeholder="{{resource.default.document_no_placeholder}}">
+        </div>
+        <div class="form-group">
+          <label for="txtSubject">{{resource.default.document_subject}}</label>
+          <input type="text" id="txtSubject" class="form-control" formControlName="subject" placeholder="{{resource.default.document_subject_placeholder}}">
+        </div>
+        <div class="form-group dpDayPicker">
+          <label for="txtDateOfRelease">{{resource.default.document_dateOfRelease}}</label>
+          <input [dpDayPicker]="config" theme="dp-material" type="text" id="txtDateOfRelease" class="form-control" formControlName="dateOfRelease" placeholder="{{resource.default.document_dateOfRelease_placeholder}}">
+        </div>
+        <div class="form-group dpDayPicker">
+          <label for="txtDateOfCreate">{{resource.default.document_dateOfCreate}}</label>
+          <input [dpDayPicker]="config" theme="dp-material" type="text" id="txtDateOfCreate" class="form-control" formControlName="dateOfCreate" placeholder="{{resource.default.document_dateOfCreate_placeholder}}">
+        </div>
+        <div class="form-group">
+          <label for="txtCreator">{{resource.default.document_creator}}</label>
+          <input type="text" id="txtCreator" class="form-control" formControlName="subject" placeholder="{{resource.default.document_creator_placeholder}}">
+        </div>
+        <div class="form-group">
+          <label for="txtIssuer">{{resource.default.document_issuer}}</label>
+          <select id="txtIssuer" class="form-control" formControlName="issuerId">
+            <option [ngValue]="null" disabled>{{resource.default.document_issuer_placeholder}}</option>
+            <option *ngFor="let r of issuerList" [value]="r.id">
+              {{r.title}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="txtDomainId">{{resource.default.document_domain}}</label>
+          <select id="txtDomainId" class="form-control" formControlName="domainId">
+            <option [ngValue]="null" disabled>{{resource.default.document_domain_placeholder}}</option>
+            <option *ngFor="let r of domainList" [value]="r.id">
+              {{r.title}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="txtTypeId">{{resource.default.document_type}}</label>
+          <select id="txtTypeId" class="form-control" formControlName="typeId">
+            <option [ngValue]="null" disabled>{{resource.default.document_type_placeholder}}</option>
+            <option *ngFor="let r of typeList" [value]="r.id">
+              {{r.title}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="file">{{resource.default.document_file}}</label>
+          <input type="file" id="file" class="form-control-file" (change)="handleFileInput($event.target.files)" />
         </div>
         <!-- Save in button -->
         <button class="btn btn-info btn-block my-4" type="submit">{{resource.default.save}}</button>

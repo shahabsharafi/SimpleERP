@@ -12,9 +12,6 @@ namespace SimpleERP.Libraries.Infrastructure.QueryHandler
 {
     public interface IQuerybleController
     {
-        IQueryable GetQuery();
-        Task<ActionResult> DeleteFromQueryAsync(IQueryable query, CancellationToken cancellationToken = default);
-        Task<ActionResult> DeleteByIdAsync(string[] ids, CancellationToken cancellationToken = default);
         void CreateExcel(IQueryable query, IExcelHelper excelHelper);
     }
 }
