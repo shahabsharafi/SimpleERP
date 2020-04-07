@@ -28,7 +28,8 @@ export class DocumentInfoComponent implements OnInit {
   public issuerList: ISelectItemModel[];
   public domainList: ISelectItemModel[];
   public typeList: ISelectItemModel[];
-  fileToUpload: File = null;
+  private fileToUpload: File = null;
+  private pageMode: string;
 
   constructor(private fb: FormBuilder, @Inject('RESOURCE') public resource: any, private documentInfoService: DocumentInfoService, private documentInfoDatasource: DocumentInfoDatasource, private convertorService: ConvertorService) {
     documentInfoDatasource.init(documentInfoService);
@@ -36,6 +37,7 @@ export class DocumentInfoComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
+      id: [null, []],
       no: ['', [Validators.required]],
       subject: ['', [Validators.required]],
       dateOfRelease: [],
@@ -51,7 +53,7 @@ export class DocumentInfoComponent implements OnInit {
       editable: o => !o.data.readonly
     };
     this.columnDefs = [
-      { colId: 'selector', hide: true, width: 40, headerName: '', sortable: false, filter: false, checkboxSelection: true },
+      { field: 'id', headerName: this.resource.default.document_id, sortable: true, filter: 'agNumberColumnFilter' },
       { field: 'no', headerName: this.resource.default.document_no, sortable: true, filter: 'agTextColumnFilter' },
       { field: 'subject', headerName: this.resource.default.document_subject, sortable: true, filter: 'agTextColumnFilter' },
       { field: 'issuerTitle', headerName: this.resource.default.document_issuerTitle, sortable: true, filter: 'agTextColumnFilter' },
@@ -64,6 +66,7 @@ export class DocumentInfoComponent implements OnInit {
     this.gridOptions.getRowClass = function (params) {
       return '';
     }
+    this.pageMode = 'list';
   }
 
   onGridReady(params) {
@@ -77,11 +80,39 @@ export class DocumentInfoComponent implements OnInit {
     this.documentInfoService.getDomains().toPromise()
       .then(response => { this.domainList = response.data.rows });
     this.documentInfoService.getTypes().toPromise()
-      .then(response => { this.typeList = response.data.rows });
+      .then(response => { this.typeList = response.data.rows });    
   }
 
-  onSelectionChanged(event) {
-    const selectedNodes: ({ data: IDocumentInfoModel } | null)[] = event.api.getSelectedNodes();
+  public exportToExcel(): void {
+    const params: IGridParams = this.documentInfoDatasource.getParams();
+    this.documentInfoService.getExcel(params).toPromise().then(o => {
+      saveAs(o, 'contect-list');
+    });
+  }
+
+  public delete(): void {
+    const id: number = this.selectedRowData.id;
+    const result = this.documentInfoService.delete(id);
+    this.refreshGrid(result);
+  }
+
+  public add(): void {
+    this.form.setValue({
+      "id": null,
+      "no": null,
+      "subject": null,
+      "dateOfRelease": null,
+      "dateOfCreate": null,
+      "creator": null,
+      "issuerId": null,
+      "domainId": null,
+      "typeId": null
+    });
+    this.pageMode = 'form';
+  }
+
+  public edit(): void {
+    const selectedNodes: ({ data: IDocumentInfoModel } | null)[] = this.gridApi.getSelectedNodes();
     const nodes = (selectedNodes || [{ data: null }]);
     if (nodes && nodes.length) {
       const data: (IDocumentInfoModel | null) = (nodes[0]).data;
@@ -89,6 +120,7 @@ export class DocumentInfoComponent implements OnInit {
         this.documentInfoService.get(data.id).toPromise().then(response => {          
           this.selectedRowData = response.data;
           this.form.setValue({
+            "id": response.data.id,
             "no": response.data.no,
             "subject": response.data.subject,
             "dateOfRelease": ConvertDate.toJalali(response.data.dateOfRelease),
@@ -98,22 +130,28 @@ export class DocumentInfoComponent implements OnInit {
             "domainId": response.data.domainId,
             "typeId": response.data.typeId
           });
+          this.pageMode = 'form';
         });
       }
-    }
+    }    
   }
 
-  select() {
-    const column = this.gridColumnApi.getColumn('selector');
-    const visible = !column.visible;
-    this.doSelect(visible);
+  public handleFileInput(files: FileList): void {
+    this.fileToUpload = files.item(0);
   }
 
-  doSelect(visible) {
-    this.rowSelection = visible ? 'multiple' : 'single';
-    this.suppressRowClickSelection = visible;
-    this.gridColumnApi.setColumnVisible('selector', visible);
-    this.gridApi.deselectAll();
+  public save(): void {
+    const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
+    model.id = this.selectedRowData.id || null;
+    model.dateOfCreate = ConvertDate.toGeregorian(model.dateOfCreate);
+    model.dateOfRelease = ConvertDate.toGeregorian(model.dateOfRelease);    
+    const result = this.documentInfoService.save(model, this.fileToUpload);
+    this.refreshGrid(result);
+    this.pageMode = 'list';
+  }
+
+  public cancel(): void {
+    this.pageMode = 'list';
   }
 
   private refreshGrid(result: Observable<ApiResult>): Promise<void | ApiResult> {
@@ -127,49 +165,5 @@ export class DocumentInfoComponent implements OnInit {
       }
       return response;
     });
-  }
-
-  handleFileInput(files: FileList) {
-    this.fileToUpload = files.item(0);
-  }
-
-  save() {
-    const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
-    model.id = this.selectedRowData.id || null;
-    model.dateOfCreate = ConvertDate.toGeregorian(model.dateOfCreate);
-    model.dateOfRelease = ConvertDate.toGeregorian(model.dateOfRelease);    
-    const result = this.documentInfoService.save(model, this.fileToUpload);
-    this.refreshGrid(result);
-  }
-
-  delete() {
-    const id: number = this.selectedRowData.id;
-    const result = this.documentInfoService.delete(id);
-    this.refreshGrid(result);
-  }
-
-  deleteByFilter() {
-    const params: IGridParams = this.documentInfoDatasource.getParams();
-    const result = this.documentInfoService.deleteByFilter(params);
-    this.refreshGrid(result);
-  }
-
-  deleteByIds() {
-    let nodes: any[] = this.gridApi.getSelectedNodes();
-    if (nodes != null && nodes.length) {
-      const list: IDocumentInfoModel[] = nodes.map(o => <IDocumentInfoModel>o.data);
-      const ids: string[] = list.map(o => o.id.toString());
-      const result = this.documentInfoService.deleteByIds(ids);
-      this.refreshGrid(result).then(_ => {
-        this.gridApi.deselectAll();
-      });      
-    }
-  }
-
-  exportToExcel() {
-    const params: IGridParams = this.documentInfoDatasource.getParams();
-    this.documentInfoService.getExcel(params).toPromise().then(o => {
-      saveAs(o, 'contect-list');
-    });
-  }
+  }  
 }

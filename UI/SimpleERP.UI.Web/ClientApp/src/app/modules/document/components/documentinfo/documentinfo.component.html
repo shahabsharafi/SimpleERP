@@ -1,42 +1,42 @@
-<div class="row">
-  <div class="col-auto m-4">
-    <div class="btn-toolbar mb-1" role="toolbar" aria-label="Toolbar with button groups">
-      <div class="btn-group mr-2" role="group" aria-label="First group">
-        <button type="button" class="btn btn-secondary btn-toollbar" (click)="select()"><i class="fa fa-check-square"></i> {{resource.default.select}}</button>
-        <div ngbDropdown class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-secondary btn-toollbar" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
-            <i class="fa fa-remove"></i>{{resource.default.delete}}
-          </button>
-          <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="width:150px">
-            <button class="dropdown-item btn-toollbar" (click)="deleteByIds()">{{resource.default.delete_selected}}</button>
-            <button class="dropdown-item btn-toollbar" (click)="deleteByFilter()">{{resource.default.delete_all}}</button>
-          </div>
-        </div>
-        <button type="button" class="btn btn-secondary btn-toollbar"><i class="fa fa-table"></i> {{resource.default.excel}}</button>
-      </div>
+<div dir="rtl">
+  <div *ngIf="pageMode=='list'">
+    <div class="jumbotron pt-2 pb-2">
+      <h2>{{resource.default.document_module_title}}</h2>
+      <p>{{resource.default.document_module_description}}</p>
     </div>
-    <ag-grid-angular style="width: 550px; height: 350px;"
-      enableRtl="true"
-      class="ag-theme-balham"
-      suppressSizeToFit="true"
-      [rowData]="rowData"
-      [defaultColDef]="defaultColDef"
-      [columnDefs]="columnDefs"
-      [rowSelection]="rowSelection"
-      [gridOptions]="gridOptions"
-      [pagination]="true"
-      [paginationAutoPageSize]="true"
-      [stopEditingWhenGridLosesFocus]="true"
-      [modules]="modules"
-      (selectionChanged)="onSelectionChanged($event)"
-      (gridReady)="onGridReady($event)">
-    </ag-grid-angular>
+    <div class="m-4">
+      <ag-grid-angular style="width: 100%; height: 350px;"
+                       enableRtl="true"
+                       class="ag-theme-balham"
+                       suppressSizeToFit="true"
+                       [rowData]="rowData"
+                       [defaultColDef]="defaultColDef"
+                       [columnDefs]="columnDefs"
+                       [rowSelection]="rowSelection"
+                       [gridOptions]="gridOptions"
+                       [pagination]="true"
+                       [paginationAutoPageSize]="true"
+                       [stopEditingWhenGridLosesFocus]="true"
+                       [modules]="modules"
+                       (selectionChanged)="onSelectionChanged($event)"
+                       (gridReady)="onGridReady($event)">
+      </ag-grid-angular>
+      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <button type="button" class="btn btn-sm mr-2 btn-primary" (click)="add()"><i class="fa fa-plus"></i> {{resource.default.add}}</button>
+        <button type="button" class="btn btn-sm mr-2 btn-primary" (click)="edit()"><i class="fa fa-edit"></i> {{resource.default.edit}}</button>
+        <button type="button" class="btn btn-sm mr-2 btn-secondary" (click)="delete()"><i class="fa fa-remove"></i> {{resource.default.delete}}</button>
+        <button type="button" class="btn btn-sm mr-2 btn-secondary" (click)="exportToExcel()"><i class="fa fa-table"></i> {{resource.default.excel}}</button>
+      </div>
+    </div>    
   </div>
-  <div class="col-auto">
-    <section class="m-4">
-      <form class="text-left border border-light p-5" (ngSubmit)="save()" [formGroup]="form">
+  <div *ngIf="pageMode=='form'">
+    <div class="jumbotron pt-2 pb-2">
+      <h2>{{resource.default.document_module_title}}</h2>
+      <p>{{resource.default.document_subject}}: <span>{{form.value.subject}}</span> - {{resource.default.document_id}}: <span>{{form.value.id}}</span></p>
+    </div>
+    <section class="m-2">
+      <form class="text-left border border-light p-2" (ngSubmit)="save()" [formGroup]="form">
 
-        <p class="h4 mb-4">{{resource.default.document_form_title}}</p>
         <div class="form-group">
           <label for="txtNo">{{resource.default.document_no}}</label>
           <input type="text" id="txtNo" class="form-control" formControlName="no" placeholder="{{resource.default.document_no_placeholder}}">
@@ -89,10 +89,12 @@
           <input type="file" id="file" class="form-control-file" (change)="handleFileInput($event.target.files)" />
         </div>
         <!-- Save in button -->
-        <button class="btn btn-info btn-block my-4" type="submit">{{resource.default.save}}</button>
-
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <button class="btn btn-sm mr-2 btn-success" type="submit">{{resource.default.save}}</button>
+          <button class="btn btn-sm mr-2 btn-secondary" (click)="cancel()">{{resource.default.return}}</button>
+        </div>
       </form>
     </section>
-
   </div>
 </div>
+  
