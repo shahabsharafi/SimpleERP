@@ -40,13 +40,12 @@ namespace SimpleERP.Document.API.Controllers
         [HttpGet]
         public IQueryable Get()
         {
-            var q = from obj in this._uor.DocumentInfoRepository.Table
+            var list = this._uor.DocumentInfoRepository.TableNoTracking
                     .Include(o => o.Issuer)
                     .Include(o => o.Domain)
-                    .Include(o => o.Type)
-                    orderby obj.Id
-                    select this._mapper.Map<DocumentInfoModel>(obj);
-            return q;
+                    .Include(o => o.Type);
+            var rows = list.Select(obj => this._mapper.Map<DocumentInfoModel>(obj)).OrderByDescending(o => o.Id);
+            return rows;
         }
 
         // GET api/values/5
@@ -85,13 +84,16 @@ namespace SimpleERP.Document.API.Controllers
         private async Task<string> UploadFile(IFormFile file)
         {
             string filePath = null;
-            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-            if (file.Length > 0)
+            if (file != null)
             {
-                filePath = Path.Combine(uploads, file.FileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                if (file.Length > 0)
                 {
-                    await file.CopyToAsync(fileStream);
+                    filePath = Path.Combine(uploads, file.FileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
                 }
             }
             return filePath;
@@ -101,7 +103,15 @@ namespace SimpleERP.Document.API.Controllers
         [HttpPost]
         public async Task<ActionResult<DocumentInfoModel>> Post([FromForm] string modelJson, [FromForm] IFormFile file, CancellationToken cancellationToken)
         {
-            DocumentInfoModel model = JsonConvert.DeserializeObject<DocumentInfoModel>(modelJson);
+            DocumentInfoModel model = null;
+            try
+            {
+                model = JsonConvert.DeserializeObject<DocumentInfoModel>(modelJson);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("model format is invalid");
+            }
             DocumentInfo entity = this._mapper.Map<DocumentInfo>(model);
             string filePath = await UploadFile(file); ;
             if (filePath != null)

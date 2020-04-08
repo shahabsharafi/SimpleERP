@@ -18,7 +18,6 @@
                        [paginationAutoPageSize]="true"
                        [stopEditingWhenGridLosesFocus]="true"
                        [modules]="modules"
-                       (selectionChanged)="onSelectionChanged($event)"
                        (gridReady)="onGridReady($event)">
       </ag-grid-angular>
       <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -55,7 +54,7 @@
         </div>
         <div class="form-group">
           <label for="txtCreator">{{resource.default.document_creator}}</label>
-          <input type="text" id="txtCreator" class="form-control" formControlName="subject" placeholder="{{resource.default.document_creator_placeholder}}">
+          <input type="text" id="txtCreator" class="form-control" formControlName="creator" placeholder="{{resource.default.document_creator_placeholder}}">
         </div>
         <div class="form-group">
           <label for="txtIssuer">{{resource.default.document_issuer}}</label>

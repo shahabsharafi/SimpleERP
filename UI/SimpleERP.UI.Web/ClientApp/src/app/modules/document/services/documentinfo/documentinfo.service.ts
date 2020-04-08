@@ -61,16 +61,6 @@ export class DocumentInfoService extends GridService {
   delete(id: number): Observable<ApiResult> {
     return this.rest.delete<ApiResult>(this._url + '/' + id);
   }
-
-  deleteByFilter(request: IGridParams): Observable<ApiResult> {
-    const queryString: string = QueryString.serialize(request);
-    return this.rest.delete<ApiResult>(this._url + (queryString ? ('?' + queryString) : ''));
-  }
-
-  deleteByIds(ids: string[]): Observable<ApiResult> {
-    const queryString: string = QueryString.serialize({ ids: ids });
-    return this.rest.delete<ApiResult>(this._url + (queryString ? ('?' + queryString) : ''));
-  }
 }
 
 export class DocumentInfoFackService extends DocumentInfoService {
@@ -112,8 +102,4 @@ export class DocumentInfoFackService extends DocumentInfoService {
   save(model: IDocumentInfoModel): Observable<IApiDataResult<IDocumentInfoModel>> { return of(null); }
 
   delete(id: number): Observable<ApiResult> { return of(null) }
-
-  deleteByFilter(request: IGridParams): Observable<ApiResult> { return of(null) }
-
-  deleteByIds(ids: string[]): Observable<ApiResult> { return of(null) }
 }

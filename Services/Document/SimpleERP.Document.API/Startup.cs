@@ -34,6 +34,7 @@ namespace SimpleERP.Document.API
                    //add configuration.json  
                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true) // Duplicate == Json1
+                   .AddJsonFile("resources.json", optional: false, reloadOnChange: true)
                    .AddEnvironmentVariables();
 
             Configuration = builder.Build();

@@ -1,0 +1,15 @@
+.alert {
+  text-align: right;
+  opacity: 1;
+  position: absolute;
+  width: 100%;
+  visibility: hidden;
+}
+
+  .alert .in {
+    visibility: visible;
+  }
+
+  .alert .close {
+    visibility: hidden;
+  }

@@ -45,6 +45,7 @@
     <None Remove="ClientApp\src\app\infrastructures\pipes\index.ts" />
     <None Remove="ClientApp\src\app\infrastructures\pipes\jalali.ts" />
     <None Remove="ClientApp\src\app\infrastructures\response.model.ts" />
+    <None Remove="ClientApp\src\app\infrastructures\services\alert.service.ts" />
     <None Remove="ClientApp\src\app\infrastructures\services\index.ts" />
     <None Remove="ClientApp\src\app\infrastructures\services\message.service.ts" />
     <None Remove="ClientApp\src\app\infrastructures\utilities\auth-interceptor.ts" />
@@ -61,6 +62,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\infrastructures\pipes\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\infrastructures\pipes\jalali.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\infrastructures\services\index.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\infrastructures\services\alert.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\infrastructures\services\models\api_result.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\infrastructures\services\models\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\infrastructures\services\message.service.ts" />

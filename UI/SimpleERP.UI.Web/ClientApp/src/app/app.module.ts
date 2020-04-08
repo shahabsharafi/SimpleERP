@@ -14,6 +14,7 @@ import { MessageService } from './infrastructures/services/message.service';
 import { DynamicFormBuilderModule } from './infrastructures/lib';
 import { DocumentInfoComponent, DocumentInfoService, DocumentInfoDatasource } from './modules';
 import { DpDatePickerModule } from 'ng2-jalali-date-picker'
+import { AlertService } from './infrastructures/services/alert.service';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { DpDatePickerModule } from 'ng2-jalali-date-picker'
     DynamicFormBuilderModule,
     DpDatePickerModule
   ],
-  providers: [    
+  providers: [
+    AlertService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     ConvertorService,
     MessageService,

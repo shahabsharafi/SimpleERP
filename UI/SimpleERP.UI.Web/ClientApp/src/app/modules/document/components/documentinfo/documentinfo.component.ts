@@ -1,12 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TextFilter, SimpleFilter, AllModules, Module  } from '@ag-grid-enterprise/all-modules';
-import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService, ConvertDate } from '../../../../infrastructures';
+import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService, ConvertDate, AlertModel } from '../../../../infrastructures';
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
 import * as moment from 'jalali-moment';
 import { IDocumentInfoModel, DocumentInfoModel, ISelectItemModel } from '../../models';
 import { DocumentInfoDatasource, DocumentInfoService } from '../../services/documentinfo';
+import { AlertService } from '../../../../infrastructures/services/alert.service';
 
 @Component({
   templateUrl: './documentinfo.component.html',
@@ -23,7 +24,6 @@ export class DocumentInfoComponent implements OnInit {
   public suppressRowClickSelection: boolean;
   private defaultColDef: any;
   private columnDefs: any[];
-  private selectedRowData: IDocumentInfoModel;
   public gridOptions: any = {};
   public issuerList: ISelectItemModel[];
   public domainList: ISelectItemModel[];
@@ -31,7 +31,7 @@ export class DocumentInfoComponent implements OnInit {
   private fileToUpload: File = null;
   private pageMode: string;
 
-  constructor(private fb: FormBuilder, @Inject('RESOURCE') public resource: any, private documentInfoService: DocumentInfoService, private documentInfoDatasource: DocumentInfoDatasource, private convertorService: ConvertorService) {
+  constructor(private fb: FormBuilder, @Inject('RESOURCE') public resource: any, private documentInfoService: DocumentInfoService, private documentInfoDatasource: DocumentInfoDatasource, private convertorService: ConvertorService, private alertService: AlertService) {
     documentInfoDatasource.init(documentInfoService);
   }
 
@@ -84,16 +84,20 @@ export class DocumentInfoComponent implements OnInit {
   }
 
   public exportToExcel(): void {
-    const params: IGridParams = this.documentInfoDatasource.getParams();
-    this.documentInfoService.getExcel(params).toPromise().then(o => {
-      saveAs(o, 'contect-list');
-    });
+    this.alertService.show(new AlertModel('success', 'export to excel...'));
+    //const params: IGridParams = this.documentInfoDatasource.getParams();
+    //this.documentInfoService.getExcel(params).toPromise().then(o => {
+    //  saveAs(o, 'contect-list');
+    //});
   }
 
   public delete(): void {
-    const id: number = this.selectedRowData.id;
-    const result = this.documentInfoService.delete(id);
-    this.refreshGrid(result);
+    const id = this.getId();
+    if (id != null) {
+      const result = this.documentInfoService.delete(id);
+      this.refreshGrid(result);
+      this.alertService.show(new AlertModel('success', 'deleting is successed'));
+    }
   }
 
   public add(): void {
@@ -111,29 +115,36 @@ export class DocumentInfoComponent implements OnInit {
     this.pageMode = 'form';
   }
 
-  public edit(): void {
+  private getId(): number | null {
     const selectedNodes: ({ data: IDocumentInfoModel } | null)[] = this.gridApi.getSelectedNodes();
     const nodes = (selectedNodes || [{ data: null }]);
     if (nodes && nodes.length) {
       const data: (IDocumentInfoModel | null) = (nodes[0]).data;
       if (data && data.id) {
-        this.documentInfoService.get(data.id).toPromise().then(response => {          
-          this.selectedRowData = response.data;
-          this.form.setValue({
-            "id": response.data.id,
-            "no": response.data.no,
-            "subject": response.data.subject,
-            "dateOfRelease": ConvertDate.toJalali(response.data.dateOfRelease),
-            "dateOfCreate": ConvertDate.toJalali(response.data.dateOfCreate),
-            "creator": response.data.creator,
-            "issuerId": response.data.issuerId,
-            "domainId": response.data.domainId,
-            "typeId": response.data.typeId
-          });
-          this.pageMode = 'form';
-        });
+        return data.id;
       }
-    }    
+    }
+    return null;
+  }
+
+  public edit(): void {
+    const id = this.getId();
+    if (id != null) {
+      this.documentInfoService.get(id).toPromise().then(response => {
+        this.form.setValue({
+          "id": response.data.id,
+          "no": response.data.no,
+          "subject": response.data.subject,
+          "dateOfRelease": ConvertDate.toJalali(response.data.dateOfRelease),
+          "dateOfCreate": ConvertDate.toJalali(response.data.dateOfCreate),
+          "creator": response.data.creator,
+          "issuerId": response.data.issuerId,
+          "domainId": response.data.domainId,
+          "typeId": response.data.typeId
+        });
+        this.pageMode = 'form';
+      });
+    }
   }
 
   public handleFileInput(files: FileList): void {
@@ -142,7 +153,6 @@ export class DocumentInfoComponent implements OnInit {
 
   public save(): void {
     const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
-    model.id = this.selectedRowData.id || null;
     model.dateOfCreate = ConvertDate.toGeregorian(model.dateOfCreate);
     model.dateOfRelease = ConvertDate.toGeregorian(model.dateOfRelease);    
     const result = this.documentInfoService.save(model, this.fileToUpload);
@@ -158,7 +168,7 @@ export class DocumentInfoComponent implements OnInit {
     return result.toPromise().then(response => {
       if (response) {
         if (response.isSuccess) {
-          this.gridApi.refreshInfiniteCache(null);
+          this.gridApi.purgeServerSideCache(null);
         } else {
           alert(response.message);
         }

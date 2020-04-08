@@ -7,11 +7,7 @@ namespace SimpleERP.Document.API.Infrastructure.Models
     {
         public DocumentInfoProfile()
         {
-            CreateMap<DocumentInfo, DocumentInfoModel>().AfterMap((s, t) => {
-                t.TypeTitle = s.Type.Title;
-                t.IssuerTitle = s.Issuer.Title;
-                t.DomainTitle = s.Domain.Title;
-            }) ;
+            CreateMap<DocumentInfo, DocumentInfoModel>();
             CreateMap<DocumentInfoModel, DocumentInfo>();
         }
     }

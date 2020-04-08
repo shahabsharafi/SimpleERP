@@ -1,10 +1,13 @@
 ﻿{
   "resources": {
-    "No": "شماره",
-    "Title": "عنوان",
-    "Archived": "آرشیو شده",
-    "StartDate": "زمان شروع",
-    "true_key": "بله",
-    "false_key": "خیر"
+    "Id": "شماره داخلی",
+    "No": "شماره ابلاغیه",
+    "Subject": "موضوع",
+    "DateOfRelease": "زمان انتشار",
+    "DateOfCreate": "زمان ایجاد",
+    "Creator": "ثبت کننده",
+    "IssuerTitle": "منتشر کننده",
+    "DomainTitle": "حوضه",
+    "TypeTitle": "نوع"
   }
 }
