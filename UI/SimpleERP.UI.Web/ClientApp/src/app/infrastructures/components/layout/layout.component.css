@@ -1,15 +1,48 @@
-.alert {
-  text-align: right;
-  opacity: 1;
+.disablePanel {
+  background-color: #000000;
+  opacity: 0.6;
   position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+.success_message {
+  position: fixed;
+  display: block;
   width: 100%;
-  visibility: hidden;
+  height: 50px;
+  top: 55px;
+  -webkit-transition: all linear 0.25s;
+  -moz-transition: all linear 0.25s;
+  -o-transition: all linear 0.25s;
+  transition: all linear 0.25s;
+  display: block !important;
 }
 
-  .alert .in {
-    visibility: visible;
+  .success_message div {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    height: 50px;
+    /*text-align: center;*/
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
-  .alert .close {
-    visibility: hidden;
+    .success_message div span {
+      float: right;
+      margin-right: 20px;
+    }
+
+    .success_message div button {
+      min-width: 60px;
+    }
+
+  .success_message.hide {
+    opacity: 0;
+  }
+
+  .success_message.show {
+    opacity: 1;
   }

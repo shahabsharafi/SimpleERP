@@ -1,13 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TextFilter, SimpleFilter, AllModules, Module  } from '@ag-grid-enterprise/all-modules';
-import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService, ConvertDate, AlertModel } from '../../../../infrastructures';
+import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService, ConvertDate, SystemMessage } from '../../../../infrastructures';
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
 import * as moment from 'jalali-moment';
 import { IDocumentInfoModel, DocumentInfoModel, ISelectItemModel } from '../../models';
 import { DocumentInfoDatasource, DocumentInfoService } from '../../services/documentinfo';
-import { AlertService } from '../../../../infrastructures/services/alert.service';
 
 @Component({
   templateUrl: './documentinfo.component.html',
@@ -31,7 +30,12 @@ export class DocumentInfoComponent implements OnInit {
   private fileToUpload: File = null;
   private pageMode: string;
 
-  constructor(private fb: FormBuilder, @Inject('RESOURCE') public resource: any, private documentInfoService: DocumentInfoService, private documentInfoDatasource: DocumentInfoDatasource, private convertorService: ConvertorService, private alertService: AlertService) {
+  constructor(
+    private fb: FormBuilder, @Inject('RESOURCE') public resource: any,
+    private documentInfoService: DocumentInfoService,
+    private documentInfoDatasource: DocumentInfoDatasource,
+    private convertorService: ConvertorService,
+    private systemMessage: SystemMessage) {
     documentInfoDatasource.init(documentInfoService);
   }
 
@@ -84,11 +88,14 @@ export class DocumentInfoComponent implements OnInit {
   }
 
   public exportToExcel(): void {
-    this.alertService.show(new AlertModel('success', 'export to excel...'));
-    //const params: IGridParams = this.documentInfoDatasource.getParams();
-    //this.documentInfoService.getExcel(params).toPromise().then(o => {
-    //  saveAs(o, 'contect-list');
-    //});
+    const me = this;
+    this.systemMessage.comfirm('export to excel...', () => {
+      const params: IGridParams = this.documentInfoDatasource.getParams();
+      me.documentInfoService.getExcel(params).toPromise().then(o => {
+        saveAs(o, 'contect-list');
+      });
+    });
+    
   }
 
   public delete(): void {
@@ -96,7 +103,7 @@ export class DocumentInfoComponent implements OnInit {
     if (id != null) {
       const result = this.documentInfoService.delete(id);
       this.refreshGrid(result);
-      this.alertService.show(new AlertModel('success', 'deleting is successed'));
+      this.systemMessage.success('deleting is successed');
     }
   }
 

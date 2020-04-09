@@ -14,19 +14,27 @@
     </ul>
   </div>
 </nav>
-<div [ngClass]="{
-     'alert': true,
-     'alert-primary': type=='primary',
-     'alert-secondary': type=='secondary',
-     'alert-success': true,
-     'alert-danger': type=='danger',
-     'alert-warning': type=='warning',
-     'alert-info': type=='info',
-     'alert-light': type=='light',
-     'alert-dark': type=='dark',
-     'float-right': true,
-     'in': allertShow,
-     'close': !allertShow}" role="alert">
-  {{allertText}}
-</div>
 <router-outlet></router-outlet>
+<div class="disablePanel" [hidden]="message == null || (message.type !== 'alert' && message.type !== 'confirm')"></div>
+<div [ngClass]="{
+     'success_message': true,
+     'show': message != null,
+     'hide': message == null}"
+     [hidden]="message == null">
+  <div [ngClass]="{
+     'alert-primary': message != null && (message.type === 'primary' || message.type === 'alert' || message.type === 'confirm'),
+     'alert-secondary': message != null && message.type=='secondary',
+     'alert-success': message != null && message.type=='success',
+     'alert-danger': message != null && message.type=='danger',
+     'alert-warning': message != null && message.type=='warning',
+     'alert-info': message != null && message.type=='info',
+     'alert-light': message != null && message.type=='light',
+     'alert-dark': message != null && message.type=='dark'}">
+    <span>{{message != null ? message.text : ''}}</span>
+    <button class="btn btn-sm mr-2 btn-success" [hidden]="message == null || (message.type !== 'alert' && message.type !== 'confirm')" (click)="messageCallback(true)">بله</button>
+    <button class="btn btn-sm mr-2 btn-secondary" [hidden]="message == null || message.type !== 'confirm'" (click)="messageCallback(false)">خیر</button>
+  </div>
+</div>
+
+
+

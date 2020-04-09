@@ -7,14 +7,12 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common
 import { AgGridModule } from '@ag-grid-community/angular';
 
 import { AppRoutingModule } from './app-routing.module';
-import { TokenService, LayoutComponent, JalaliPipe, ConvertorService } from './infrastructures';
+import { TokenService, LayoutComponent, JalaliPipe, ConvertorService, MessageService, SystemMessage } from './infrastructures';
 import * as resource from './infrastructures/resource.json'; 
 import { AuthInterceptor } from './infrastructures/utilities/auth-interceptor';
-import { MessageService } from './infrastructures/services/message.service';
 import { DynamicFormBuilderModule } from './infrastructures/lib';
 import { DocumentInfoComponent, DocumentInfoService, DocumentInfoDatasource } from './modules';
 import { DpDatePickerModule } from 'ng2-jalali-date-picker'
-import { AlertService } from './infrastructures/services/alert.service';
 
 
 @NgModule({
@@ -35,7 +33,7 @@ import { AlertService } from './infrastructures/services/alert.service';
     DpDatePickerModule
   ],
   providers: [
-    AlertService,
+    SystemMessage,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     ConvertorService,
     MessageService,
