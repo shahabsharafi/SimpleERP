@@ -1,3 +1,15 @@
 .dpDayPicker {
     margin-bottom: 0;
 }
+
+section, section input, section select, section textarea {
+  font-size: 0.8rem;
+}
+
+.list-column {
+    padding-left: 0;
+}
+
+.form-column {
+  padding-right: 0;
+}

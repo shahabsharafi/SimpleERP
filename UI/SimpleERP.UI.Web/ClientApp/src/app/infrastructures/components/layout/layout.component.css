@@ -46,3 +46,33 @@
   .success_message.show {
     opacity: 1;
   }
+
+.notification_message {
+  position: fixed;
+  display: block;
+  width: 400px;
+  bottom: 0px;
+  right: 0px;
+  text-align: right;
+  font-size: .8rem;
+  margin: 10px;
+  padding: 10px;
+  -webkit-transition: all linear 0.25s;
+  -moz-transition: all linear 0.25s;
+  -o-transition: all linear 0.25s;
+  transition: all linear 0.25s;
+}
+
+  .notification_message ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  .notification_message li {
+    list-style: none;
+    background-color: #333333;
+    color: #ffffff;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+  }

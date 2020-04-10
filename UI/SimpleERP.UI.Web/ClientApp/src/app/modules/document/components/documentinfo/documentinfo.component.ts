@@ -86,25 +86,25 @@ export class DocumentInfoComponent implements OnInit {
     this.documentInfoService.getTypes().toPromise()
       .then(response => { this.typeList = response.data.rows });    
   }
-
-  public exportToExcel(): void {
-    const me = this;
-    this.systemMessage.comfirm('export to excel...', () => {
-      const params: IGridParams = this.documentInfoDatasource.getParams();
-      me.documentInfoService.getExcel(params).toPromise().then(o => {
-        saveAs(o, 'contect-list');
-      });
-    });
-    
+  private i: number = 0;
+  public exportToExcel(): void {    
+    const params: IGridParams = this.documentInfoDatasource.getParams();
+    this.documentInfoService.getExcel(params).toPromise().then(o => {
+      saveAs(o, 'contect-list');
+      this.systemMessage.success('عملیات انجام شد.');
+    });   
   }
 
   public delete(): void {
-    const id = this.getId();
-    if (id != null) {
-      const result = this.documentInfoService.delete(id);
-      this.refreshGrid(result);
-      this.systemMessage.success('deleting is successed');
-    }
+    const id = this.getId();    
+    const me = this;
+    this.systemMessage.comfirm('آیا مطمعن هستید؟', () => {
+      if (id != null) {
+        const result = me.documentInfoService.delete(id);
+        me.refreshGrid(result);
+        me.systemMessage.success('حذف انجام شد.');
+      }
+    }); 
   }
 
   public add(): void {

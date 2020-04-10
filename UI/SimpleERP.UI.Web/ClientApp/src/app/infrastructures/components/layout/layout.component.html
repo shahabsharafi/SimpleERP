@@ -14,6 +14,13 @@
     </ul>
   </div>
 </nav>
+<div class="notification_message" [hidden]="notifications == null">
+  <ul>
+    <li *ngFor="let item of notifications">
+      {{item}}
+    </li>
+  </ul>
+</div>
 <router-outlet></router-outlet>
 <div class="disablePanel" [hidden]="message == null || (message.type !== 'alert' && message.type !== 'confirm')"></div>
 <div [ngClass]="{

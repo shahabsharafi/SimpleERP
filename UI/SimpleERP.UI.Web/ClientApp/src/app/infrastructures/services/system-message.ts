@@ -9,6 +9,7 @@ this.messageReceived.messageReceived.subscribe((message: MessageModel) => {
 @Injectable()
 export class SystemMessage {
   public messageReceived = new EventEmitter<SystemMessageEventParameters>();
+  public notificationReceived = new EventEmitter<string>();
 
   constructor() { }
 
@@ -27,6 +28,12 @@ export class SystemMessage {
       }
     })
     this.messageReceived.emit(params);
+  }
+
+  public notify(text: string): void {
+    if (text.length > 200)
+      text = text.substr(0, 200) + '...';
+    this.notificationReceived.emit(text);
   }
 }
 
