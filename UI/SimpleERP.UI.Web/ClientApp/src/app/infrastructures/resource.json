@@ -29,6 +29,8 @@
   "document_domain_placeholder": "حوضه را انتخاب کنید",
   "document_type": "نوع",
   "document_type_placeholder": "نوع را وارد کنید",
+  "document_text": "متن بخش نامه",
+  "document_text_placeholder": "متن بخش نامه را وارد کنید",
   "document_file": "انتخاب فایل",
   "save": "ثبت",
   "return": "بازگشت",

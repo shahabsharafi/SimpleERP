@@ -6,10 +6,30 @@ section, section input, section select, section textarea {
   font-size: 0.8rem;
 }
 
-.list-column {
-    padding-left: 0;
+.image-slider {
+  width: 270px;
 }
 
-.form-column {
-  padding-right: 0;
+.image-panel {
+  width: 240px;
+  border: 1px solid #dee2e6 !important;
+}
+
+
+.image-list {
+  height: 470px;
+  overflow-y: scroll;
+  display: block;
+  border: 0px;
+  margin: auto;
+  width: 100%;
+}
+
+  .image-list div {
+      margin: 10px;
+  }
+
+.img-thumbnail {
+  max-width: 150px;
+  max-height: 150px;
 }
