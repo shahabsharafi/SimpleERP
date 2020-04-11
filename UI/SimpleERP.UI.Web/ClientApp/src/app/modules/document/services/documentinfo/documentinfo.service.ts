@@ -44,17 +44,22 @@ export class DocumentInfoService extends GridService {
     return this.rest.get<ApiCollectionResult<ISelectItemModel>>(this.baseUrl + 'api/documentinfos/types');
   }
 
-  save(model: IDocumentInfoModel, file: File): Observable<IApiDataResult<IDocumentInfoModel>> {
+  save(model: IDocumentInfoModel): Observable<IApiDataResult<IDocumentInfoModel>> {
+    let result: Observable<IApiDataResult<IDocumentInfoModel>>;
+    if (model.id) {
+      result = this.rest.put<IApiDataResult<IDocumentInfoModel>>(this._url + '/' + model.id, model);
+    } else {
+      model.no = Math.floor(Math.random() * 1000) + '';
+      result = this.rest.post<IApiDataResult<IDocumentInfoModel>>(this._url, model);
+    }
+    return result;
+  }
+
+  uploadFile(id: number, file: File): Observable<IApiDataResult<IDocumentInfoModel>> {
     let result: Observable<IApiDataResult<IDocumentInfoModel>>;
     let formData: FormData = new FormData();
     formData.append('file', file);
-    formData.append('modelJson', JSON.stringify(model));
-    if (model.id) {
-      result = this.rest.put<IApiDataResult<IDocumentInfoModel>>(this._url + '/' + model.id, formData);
-    } else {
-      model.no = Math.floor(Math.random() * 1000) + '';
-      result = this.rest.post<IApiDataResult<IDocumentInfoModel>>(this._url, formData);
-    }
+    result = this.rest.put<IApiDataResult<IDocumentInfoModel>>(this._url + '/upload/' + id, formData);
     return result;
   }
 

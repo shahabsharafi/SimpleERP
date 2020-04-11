@@ -41,7 +41,7 @@ namespace SimpleERP.Document.API
 
             if (string.IsNullOrWhiteSpace(env.WebRootPath))
             {
-                env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\UI\\SimpleERP.UI.Web", "wwwroot");
             }
         }
 

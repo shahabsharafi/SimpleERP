@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimpleERP.Document.API.Infrastructure.Data
 {
@@ -11,7 +10,6 @@ namespace SimpleERP.Document.API.Infrastructure.Data
         public long Id { get; set; }
         public string  No { get; set; }
         public string Subject { get; set; }
-        public string FilePath { get; set; }
         public string Text { get; set; }
         public string DateOfRelease { get; set; }
         public string DateOfCreate { get; set; }
@@ -24,5 +22,6 @@ namespace SimpleERP.Document.API.Infrastructure.Data
         public Domain Domain { get; set; }
         public long TypeId { get; set; }
         public Type Type { get; set; }
+        public ICollection<DocumentFile> DocumentFiles { get; set; }
     }
 }

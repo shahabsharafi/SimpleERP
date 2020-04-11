@@ -28,13 +28,11 @@ namespace SimpleERP.Document.API.Controllers
     {
         private readonly IUnitOfRepository _uor;
         private readonly IMapper _mapper;
-        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public DocumentInfosController(IUnitOfRepository uor, IMapper mapper, IHostingEnvironment environment)
+        public DocumentInfosController(IUnitOfRepository uor, IMapper mapper)
         {
             this._uor = uor;
             this._mapper = mapper;
-            this._hostingEnvironment = environment;
         }
 
         [HttpGet]
@@ -81,43 +79,52 @@ namespace SimpleERP.Document.API.Controllers
             return this._uor.TypeRepository.TableNoTracking;
         }
 
-        private async Task<string> UploadFile(IFormFile file)
+        [Route("upload")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(long id, [FromForm] IFormFile file, CancellationToken cancellationToken)
         {
-            string filePath = null;
-            if (file != null)
-            {
-                var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                if (file.Length > 0)
+            if (file == null || file.Length < 1)
+                return BadRequest("there is no fle to upload");
+            try
+            {                
+                var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
+                using (var fileStream = new MemoryStream())
                 {
-                    filePath = Path.Combine(uploads, file.FileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    await file.CopyToAsync(fileStream);
+                    entity.DocumentFiles.Add(new DocumentFile()
                     {
-                        await file.CopyToAsync(fileStream);
-                    }
-                }
+                        Name = file.FileName,
+                        Content = fileStream.ToArray(),
+                        ContentType = file.ContentType
+                    });
+                }                
+                await this._uor.DocumentInfoRepository.UpdateAsync(entity, cancellationToken);
             }
-            return filePath;
+            catch (Exception)
+            {
+                return BadRequest("upload file is faled");
+            }            
+            return Ok();
+        }
+
+        [Route("download")]
+        [HttpGet()]
+        public async Task<ActionResult> GetImage(long id, int fileId, CancellationToken cancellationToken)
+        {
+            var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
+            if (entity == null)
+                return BadRequest("id is not found");
+            var file = entity.DocumentFiles.FirstOrDefault(o => o.Id == fileId);
+            if (file == null)
+                return BadRequest("file id is not found");
+            return base.File(file.Content, file.ContentType);
         }
 
         // POST api/values
         [HttpPost]
-        public async Task<ActionResult<DocumentInfoModel>> Post([FromForm] string modelJson, [FromForm] IFormFile file, CancellationToken cancellationToken)
-        {
-            DocumentInfoModel model = null;
-            try
-            {
-                model = JsonConvert.DeserializeObject<DocumentInfoModel>(modelJson);
-            }
-            catch (Exception e)
-            {
-                return BadRequest("model format is invalid");
-            }
+        public async Task<ActionResult<DocumentInfoModel>> Post(DocumentInfoModel model, CancellationToken cancellationToken)
+        {            
             DocumentInfo entity = this._mapper.Map<DocumentInfo>(model);
-            string filePath = await UploadFile(file); ;
-            if (filePath != null)
-            {
-                entity.FilePath = filePath;
-            }
             await this._uor.DocumentInfoRepository.AddAsync(entity, cancellationToken);
             var newModel = this._mapper.Map<DocumentInfoModel>(entity);
             return Ok(newModel);
@@ -125,16 +132,10 @@ namespace SimpleERP.Document.API.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<DocumentInfoModel>> Put(long id, [FromForm] string modelJson, [FromForm] IFormFile file, CancellationToken cancellationToken)
+        public async Task<ActionResult<DocumentInfoModel>> Put(long id, DocumentInfoModel model, CancellationToken cancellationToken)
         {
-            DocumentInfoModel model = JsonConvert.DeserializeObject<DocumentInfoModel>(modelJson);
             var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
             this._mapper.Map(model, entity);
-            string filePath = await UploadFile(file); ;
-            if (filePath != null)
-            {
-                entity.FilePath = filePath;
-            }
             await this._uor.DocumentInfoRepository.UpdateAsync(entity, cancellationToken);
             var newModel = this._mapper.Map<DocumentInfoModel>(entity);
             return Ok(newModel);

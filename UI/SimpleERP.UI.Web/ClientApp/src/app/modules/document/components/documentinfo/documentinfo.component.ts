@@ -27,8 +27,8 @@ export class DocumentInfoComponent implements OnInit {
   public issuerList: ISelectItemModel[];
   public domainList: ISelectItemModel[];
   public typeList: ISelectItemModel[];
-  private fileToUpload: File = null;
   private pageMode: string;
+  private selectedObject: IDocumentInfoModel;
 
   constructor(
     private fb: FormBuilder, @Inject('RESOURCE') public resource: any,
@@ -93,19 +93,7 @@ export class DocumentInfoComponent implements OnInit {
       saveAs(o, 'contect-list');
       this.systemMessage.success('عملیات انجام شد.');
     });   
-  }
-
-  public delete(): void {
-    const id = this.getId();    
-    const me = this;
-    this.systemMessage.comfirm('آیا مطمعن هستید؟', () => {
-      if (id != null) {
-        const result = me.documentInfoService.delete(id);
-        me.refreshGrid(result);
-        me.systemMessage.success('حذف انجام شد.');
-      }
-    }); 
-  }
+  }  
 
   public add(): void {
     this.form.setValue({
@@ -134,9 +122,18 @@ export class DocumentInfoComponent implements OnInit {
     return null;
   }
 
-  public edit(): void {
+  onSelectionChanged(event) {
     const id = this.getId();
     if (id != null) {
+      this.documentInfoService.get(id).toPromise().then(response => {
+        this.selectedObject = response.data;
+      });
+    }
+  }
+
+  public edit(): void {    
+    if (this.selectedObject != null && this.selectedObject.id != null) {
+      const id = this.selectedObject.id;
       this.documentInfoService.get(id).toPromise().then(response => {
         this.form.setValue({
           "id": response.data.id,
@@ -154,15 +151,41 @@ export class DocumentInfoComponent implements OnInit {
     }
   }
 
+  public delete(): void {
+    if (this.selectedObject != null && this.selectedObject.id != null) {
+      const id = this.selectedObject.id;
+      const me = this;
+      this.systemMessage.comfirm('آیا مطمعن هستید؟', () => {
+        const result = me.documentInfoService.delete(id);
+        me.refreshGrid(result);
+        me.systemMessage.success('حذف انجام شد.');
+      });
+    }
+  }
+
   public handleFileInput(files: FileList): void {
-    this.fileToUpload = files.item(0);
+    const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
+    if (model.id == null)
+      throw "upload file is not enabled in creation new document";
+    const fileToUpload: File = files.item(0);
+    const result = this.documentInfoService.uploadFile(model.id, fileToUpload);
+    result.toPromise().then(response => {
+      if (response) {
+        if (response.isSuccess) {
+          this.systemMessage.success("عملیات موفقیت آمیز بود");
+        } else {
+          alert(response.message);
+        }
+      }
+      return response;
+    });  
   }
 
   public save(): void {
     const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
     model.dateOfCreate = ConvertDate.toGeregorian(model.dateOfCreate);
     model.dateOfRelease = ConvertDate.toGeregorian(model.dateOfRelease);    
-    const result = this.documentInfoService.save(model, this.fileToUpload);
+    const result = this.documentInfoService.save(model);
     this.refreshGrid(result);
     this.pageMode = 'list';
   }

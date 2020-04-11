@@ -15,7 +15,7 @@ namespace SimpleERP.Document.API.Infrastructure.Models
         public string  No { get; set; }
         [ExcelProperty]
         public string Subject { get; set; }
-        public string FilePath { get; set; }
+        public long[] DocumetFileIds { get; set; }
         [ExcelProperty]
         public string Text { get; set; }
         [ExcelProperty]
