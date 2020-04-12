@@ -1,3 +1,8 @@
+.grid-list {
+    width: 100%;
+    height: 350px;
+}
+
 .dpDayPicker {
     margin-bottom: 0;
 }
@@ -6,18 +11,26 @@ section, section input, section select, section textarea {
   font-size: 0.8rem;
 }
 
+.readonly-panel {
+  width: 250px;
+  height: 350px;
+  font-size: 0.8rem;
+}
+
 .image-slider {
-  width: 270px;
+  width: 160px;
 }
 
 .image-panel {
-  width: 240px;
-  border: 1px solid #dee2e6 !important;
+  width: 130px;
+  height: 350px;
 }
 
 
 .image-list {
-  height: 470px;
+  border: 1px solid #dee2e6 !important;
+  height: 340px;
+  margin-bottom: 10px;
   overflow-y: scroll;
   display: block;
   border: 0px;
@@ -25,11 +38,61 @@ section, section input, section select, section textarea {
   width: 100%;
 }
 
-  .image-list div {
-      margin: 10px;
+  .image-list div {    
+    margin: 5px;
+    display: inline-block;
+    position: relative;
   }
 
 .img-thumbnail {
-  max-width: 150px;
-  max-height: 150px;
+  max-width: 100px;
+  max-height: 100px;
 }
+
+.image-btn {
+  background-color: #000000;
+  opacity: 0.5;
+  background-repeat: no-repeat;
+  border: none;
+  color: #ffffff;
+  padding: 0px;
+  margin: 0px;
+  min-width: 20px;
+  max-height: 20px;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 0px;
+  left: 2px;
+}
+
+.show-btn {
+  position: absolute;
+  top: 0px;
+  left: 25px;
+}
+
+.image-viewer-back {
+  background-color: #ffffff;
+  opacity: 0.8;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+  .image-viewer div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+
+.image-viewer img {
+  padding: 10px;
+  max-width: 580px;
+  max-height: 580px;
+}
+

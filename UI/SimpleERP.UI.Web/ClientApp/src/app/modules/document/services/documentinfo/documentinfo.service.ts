@@ -44,15 +44,17 @@ export class DocumentInfoService extends GridService {
     return this.rest.get<ApiCollectionResult<ISelectItemModel>>(this.baseUrl + 'api/documentinfos/types');
   }
 
-  save(model: IDocumentInfoModel): Observable<IApiDataResult<IDocumentInfoModel>> {
-    let result: Observable<IApiDataResult<IDocumentInfoModel>>;
-    if (model.id) {
-      result = this.rest.put<IApiDataResult<IDocumentInfoModel>>(this._url + '/' + model.id, model);
-    } else {
-      model.no = Math.floor(Math.random() * 1000) + '';
-      result = this.rest.post<IApiDataResult<IDocumentInfoModel>>(this._url, model);
-    }
-    return result;
+  update(model: IDocumentInfoModel): Observable<IApiDataResult<IDocumentInfoModel>> {
+    return this.rest.put<IApiDataResult<IDocumentInfoModel>>(this._url + '/' + model.id, model);
+  }
+
+  insert(model: IDocumentInfoModel): Observable<IApiDataResult<IDocumentInfoModel>> {
+    model.no = Math.floor(Math.random() * 1000) + '';
+    return this.rest.post<IApiDataResult<IDocumentInfoModel>>(this._url, model);
+  }
+
+  delete(id: number): Observable<ApiResult> {
+    return this.rest.delete<ApiResult>(this._url + '/' + id);
   }
 
   uploadFile(id: number, file: File): Observable<IApiDataResult<IDocumentInfoModel>> {
@@ -63,14 +65,18 @@ export class DocumentInfoService extends GridService {
     return result;
   }
 
-  delete(id: number): Observable<ApiResult> {
-    return this.rest.delete<ApiResult>(this._url + '/' + id);
+  getImageUrl(id: number): string {
+    return this._url + '/download/' + id;
+  }
+
+  deleteImage(id: number): Observable<IApiDataResult<IDocumentInfoModel>> {
+    return this.rest.delete<IApiDataResult<IDocumentInfoModel>>(this._url + '/deleteimage/' + id);
   }
 }
 
 export class DocumentInfoFackService extends DocumentInfoService {
 
-  static DOCUMENT_INFO: IDocumentInfoModel = new DocumentInfoModel(0, "", "", "", "", "", "", "", "", "", 0, "", 0, "", 0, "");
+  static DOCUMENT_INFO: IDocumentInfoModel = new DocumentInfoModel(0, "", "", "", "", "", "", "", "", 0, "", 0, "", 0, "", []);
   static DOCUMENT_INFO_ARRAY: IDocumentInfoModel[] = [DocumentInfoFackService.DOCUMENT_INFO];
   static DOCUMENT_INFOS: ICollection<IDocumentInfoModel> = new Collection<IDocumentInfoModel>(DocumentInfoFackService.DOCUMENT_INFO_ARRAY, 1);
 

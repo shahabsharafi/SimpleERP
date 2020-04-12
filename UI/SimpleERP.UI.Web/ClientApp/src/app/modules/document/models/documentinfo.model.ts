@@ -2,7 +2,6 @@ export interface IDocumentInfoModel {
   id?: number;
   no: string;
   subject: string;
-  filePath: string;
   text: string;
   dateOfRelease: string;
   dateOfCreate: string;
@@ -15,6 +14,7 @@ export interface IDocumentInfoModel {
   domainTitle: string;
   typeId: number;
   typeTitle: string;
+  DocumetFileIds: number[];
 }
 
 
@@ -23,7 +23,6 @@ export class DocumentInfoModel implements IDocumentInfoModel {
     public id: number | null,
     public no: string,
     public subject: string,
-    public filePath: string,
     public text: string,
     public dateOfRelease: string,
     public dateOfCreate: string,
@@ -35,6 +34,7 @@ export class DocumentInfoModel implements IDocumentInfoModel {
     public domainId: number,
     public domainTitle: string,
     public typeId: number,
-    public typeTitle: string
+    public typeTitle: string,
+    public DocumetFileIds: number[]
   ) { }
 }

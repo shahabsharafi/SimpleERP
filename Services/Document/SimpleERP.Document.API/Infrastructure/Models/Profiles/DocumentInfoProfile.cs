@@ -9,7 +9,7 @@ namespace SimpleERP.Document.API.Infrastructure.Models
         public DocumentInfoProfile()
         {
             CreateMap<DocumentInfo, DocumentInfoModel>().AfterMap((e, m) => {
-                m.DocumetFileIds = e.DocumentFiles.Select(o => o.Id).ToArray();
+                m.DocumetFileIds = e.DocumentFiles?.Select(o => o.Id)?.ToArray();
             });
             CreateMap<DocumentInfoModel, DocumentInfo>();
         }

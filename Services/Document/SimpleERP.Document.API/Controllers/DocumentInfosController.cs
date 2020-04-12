@@ -39,9 +39,9 @@ namespace SimpleERP.Document.API.Controllers
         public IQueryable Get()
         {
             var list = this._uor.DocumentInfoRepository.TableNoTracking
-                    .Include(o => o.Issuer)
-                    .Include(o => o.Domain)
-                    .Include(o => o.Type);
+                .Include(o => o.Issuer)
+                .Include(o => o.Domain)
+                .Include(o => o.Type);
             var rows = list.Select(obj => this._mapper.Map<DocumentInfoModel>(obj)).OrderByDescending(o => o.Id);
             return rows;
         }
@@ -50,11 +50,9 @@ namespace SimpleERP.Document.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DocumentInfoModel>> Get(long id, CancellationToken cancellationToken)
         {
-            var obj = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
-            await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Issuer, cancellationToken);
-            await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Domain, cancellationToken);
-            await this._uor.DocumentInfoRepository.LoadReferenceAsync(obj, o => o.Type, cancellationToken);
-            var model = this._mapper.Map<DocumentInfoModel>(obj);
+            var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
+            await LoadEntityProperties(entity, cancellationToken);
+            var model = this._mapper.Map<DocumentInfoModel>(entity);
             return Ok(model);
         }
 
@@ -79,18 +77,20 @@ namespace SimpleERP.Document.API.Controllers
             return this._uor.TypeRepository.TableNoTracking;
         }
 
-        [Route("upload")]
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(long id, [FromForm] IFormFile file, CancellationToken cancellationToken)
+        [HttpPut("upload/{id}")]
+        public async Task<ActionResult<DocumentInfoModel>> Put(long id, [FromForm] IFormFile file, CancellationToken cancellationToken)
         {
             if (file == null || file.Length < 1)
                 return BadRequest("there is no fle to upload");
+            DocumentInfoModel newModel;
             try
             {                
                 var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
                 using (var fileStream = new MemoryStream())
                 {
                     await file.CopyToAsync(fileStream);
+                    if (entity.DocumentFiles == null)
+                        entity.DocumentFiles = new List<DocumentFile>();
                     entity.DocumentFiles.Add(new DocumentFile()
                     {
                         Name = file.FileName,
@@ -99,22 +99,20 @@ namespace SimpleERP.Document.API.Controllers
                     });
                 }                
                 await this._uor.DocumentInfoRepository.UpdateAsync(entity, cancellationToken);
+                await LoadEntityProperties(entity, cancellationToken);
+                newModel = this._mapper.Map<DocumentInfoModel>(entity);
             }
             catch (Exception)
             {
                 return BadRequest("upload file is faled");
             }            
-            return Ok();
+            return Ok(newModel);
         }
 
-        [Route("download")]
-        [HttpGet()]
-        public async Task<ActionResult> GetImage(long id, int fileId, CancellationToken cancellationToken)
+        [HttpGet("download/{id}")]
+        public async Task<ActionResult> GetImage(long id, CancellationToken cancellationToken)
         {
-            var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
-            if (entity == null)
-                return BadRequest("id is not found");
-            var file = entity.DocumentFiles.FirstOrDefault(o => o.Id == fileId);
+            var file = await this._uor.DocumentFileRepository.GetByIdAsync(cancellationToken, id);
             if (file == null)
                 return BadRequest("file id is not found");
             return base.File(file.Content, file.ContentType);
@@ -126,6 +124,7 @@ namespace SimpleERP.Document.API.Controllers
         {            
             DocumentInfo entity = this._mapper.Map<DocumentInfo>(model);
             await this._uor.DocumentInfoRepository.AddAsync(entity, cancellationToken);
+            await LoadEntityProperties(entity, cancellationToken);
             var newModel = this._mapper.Map<DocumentInfoModel>(entity);
             return Ok(newModel);
         }
@@ -137,9 +136,12 @@ namespace SimpleERP.Document.API.Controllers
             var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
             this._mapper.Map(model, entity);
             await this._uor.DocumentInfoRepository.UpdateAsync(entity, cancellationToken);
+            await LoadEntityProperties(entity, cancellationToken);
             var newModel = this._mapper.Map<DocumentInfoModel>(entity);
             return Ok(newModel);
         }
+
+       
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
@@ -148,6 +150,27 @@ namespace SimpleERP.Document.API.Controllers
             var entity = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, id);
             await this._uor.DocumentInfoRepository.DeleteAsync(entity, cancellationToken);
             return Ok();
+        }
+        
+        [HttpDelete("deleteimage/{id}")]
+        public async Task<ActionResult<DocumentInfoModel>> DeleteImage(long id, CancellationToken cancellationToken)
+        {
+            var entity = await this._uor.DocumentFileRepository.GetByIdAsync(cancellationToken, id);
+            var documentInfoId = entity.DocumentInfoId;
+            await this._uor.DocumentFileRepository.DeleteAsync(entity, cancellationToken);
+            var document = await this._uor.DocumentInfoRepository.GetByIdAsync(cancellationToken, documentInfoId);
+            await this.LoadEntityProperties(document, cancellationToken);
+            var model = this._mapper.Map<DocumentInfoModel>(document);
+            return Ok(model);
+        }
+
+        [NonAction]
+        private async Task LoadEntityProperties(DocumentInfo entity, CancellationToken cancellationToken)
+        {
+            await this._uor.DocumentInfoRepository.LoadReferenceAsync(entity, o => o.Issuer, cancellationToken);
+            await this._uor.DocumentInfoRepository.LoadReferenceAsync(entity, o => o.Domain, cancellationToken);
+            await this._uor.DocumentInfoRepository.LoadReferenceAsync(entity, o => o.Type, cancellationToken);
+            await this._uor.DocumentInfoRepository.LoadCollectionAsync(entity, o => o.DocumentFiles, cancellationToken);
         }
 
         [NonAction]

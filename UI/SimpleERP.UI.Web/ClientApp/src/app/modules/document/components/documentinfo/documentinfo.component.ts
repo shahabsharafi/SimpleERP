@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TextFilter, SimpleFilter, AllModules, Module  } from '@ag-grid-enterprise/all-modules';
-import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService, ConvertDate, SystemMessage } from '../../../../infrastructures';
+import { AgGridUtility, ApiResult, IGridParams, ConvertorService, GridService, ConvertDate, SystemMessage, IApiDataResult } from '../../../../infrastructures';
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
 import * as moment from 'jalali-moment';
@@ -29,6 +29,7 @@ export class DocumentInfoComponent implements OnInit {
   public typeList: ISelectItemModel[];
   private pageMode: string;
   private selectedObject: IDocumentInfoModel;
+  public selectedImageUrl: string;
 
   constructor(
     private fb: FormBuilder, @Inject('RESOURCE') public resource: any,
@@ -110,24 +111,18 @@ export class DocumentInfoComponent implements OnInit {
     this.pageMode = 'form';
   }
 
-  private getId(): number | null {
-    const selectedNodes: ({ data: IDocumentInfoModel } | null)[] = this.gridApi.getSelectedNodes();
-    const nodes = (selectedNodes || [{ data: null }]);
-    if (nodes && nodes.length) {
-      const data: (IDocumentInfoModel | null) = (nodes[0]).data;
-      if (data && data.id) {
-        return data.id;
-      }
-    }
-    return null;
-  }
-
   onSelectionChanged(event) {
-    const id = this.getId();
-    if (id != null) {
-      this.documentInfoService.get(id).toPromise().then(response => {
-        this.selectedObject = response.data;
-      });
+    const nodes = this.gridApi.getSelectedNodes();
+    if (nodes && nodes.length) {
+      if (nodes[0].data) {
+        const data = <IDocumentInfoModel>nodes[0].data;
+        if (data.id) {
+          const id = data.id;
+          this.documentInfoService.get(id).toPromise().then(response => {
+            this.selectedObject = response.data;
+          });
+        }
+      }
     }
   }
 
@@ -164,29 +159,38 @@ export class DocumentInfoComponent implements OnInit {
   }
 
   public handleFileInput(files: FileList): void {
-    const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
-    if (model.id == null)
+    if (this.selectedObject == null)
       throw "upload file is not enabled in creation new document";
     const fileToUpload: File = files.item(0);
-    const result = this.documentInfoService.uploadFile(model.id, fileToUpload);
-    result.toPromise().then(response => {
-      if (response) {
-        if (response.isSuccess) {
-          this.systemMessage.success("عملیات موفقیت آمیز بود");
-        } else {
-          alert(response.message);
-        }
-      }
-      return response;
-    });  
+    const result = this.documentInfoService.uploadFile(this.selectedObject.id, fileToUpload);
+    this.refreshRow(result);    
+  }
+
+  public getImageUrl(id: number): string {
+    return this.documentInfoService.getImageUrl(id);
+  }
+
+  public showImage(id: number): void {
+    this.selectedImageUrl = this.documentInfoService.getImageUrl(id);
+  }
+
+  public deleteImage(id: number): void {
+    const result = this.documentInfoService.deleteImage(id);
+    this.refreshRow(result); 
   }
 
   public save(): void {
     const model: IDocumentInfoModel = (<any>Object).assign({}, this.form.value);
     model.dateOfCreate = ConvertDate.toGeregorian(model.dateOfCreate);
-    model.dateOfRelease = ConvertDate.toGeregorian(model.dateOfRelease);    
-    const result = this.documentInfoService.save(model);
-    this.refreshGrid(result);
+    model.dateOfRelease = ConvertDate.toGeregorian(model.dateOfRelease);  
+    if (model.id) {
+      const result = this.documentInfoService.update(model);
+      this.refreshRow(result);
+    }
+    else {
+      const result = this.documentInfoService.insert(model);      
+      this.refreshGrid(result);
+    }
     this.pageMode = 'list';
   }
 
@@ -194,10 +198,29 @@ export class DocumentInfoComponent implements OnInit {
     this.pageMode = 'list';
   }
 
+  private refreshRow(result: Observable<IApiDataResult<IDocumentInfoModel>>): Promise<void | ApiResult> {
+    return result.toPromise().then(response => {
+      if (response) {
+        if (response.isSuccess) {
+          this.selectedObject = response.data;
+          this.gridApi.forEachNode(function (rowNode) {
+            if (response.data.id === rowNode.data.id) {
+              rowNode.setData(response.data);
+            }
+          });
+        } else {
+          alert(response.message);
+        }
+      }
+      return response;
+    });
+  }  
+
   private refreshGrid(result: Observable<ApiResult>): Promise<void | ApiResult> {
     return result.toPromise().then(response => {
       if (response) {
         if (response.isSuccess) {
+          this.selectedObject = null;
           this.gridApi.purgeServerSideCache(null);
         } else {
           alert(response.message);

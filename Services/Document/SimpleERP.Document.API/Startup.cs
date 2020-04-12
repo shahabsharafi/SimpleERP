@@ -63,6 +63,7 @@ namespace SimpleERP.Document.API
             services.AddScoped<IDomainRepository, DomainRepository>();
             services.AddScoped<ITypeRepository, TypeRepository>();
             services.AddScoped<IDocumentInfoRepository, DocumentInfoRepository>();
+            services.AddScoped<IDocumentFileRepository, DocumentFileRepository>();
             services.AddScoped<IUnitOfRepository, UnitOfRepository>();
             services.AddScoped<IQueryHandler, AgGridQueryHandler>();
             services.AddScoped<IResourceManager, ResourceManager>();

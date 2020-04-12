@@ -10,6 +10,7 @@ namespace SimpleERP.Document.API.Infrastructure.Contracts
     public interface IUnitOfRepository
     {
         IDocumentInfoRepository DocumentInfoRepository { get; }
+        IDocumentFileRepository DocumentFileRepository { get; }
         IIssuerRepository IssuerRepository { get; }
         IDomainRepository DomainRepository { get; }
         ITypeRepository TypeRepository { get; }

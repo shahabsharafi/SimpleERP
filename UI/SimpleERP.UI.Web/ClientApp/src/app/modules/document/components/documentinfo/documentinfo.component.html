@@ -8,9 +8,8 @@
     <div class="m-4">
       <div class="row">
         <div class="col">
-          <ag-grid-angular style="width: 100%; height: 350px;"
+          <ag-grid-angular class="ag-theme-balham grid-list"
                            enableRtl="true"
-                           class="ag-theme-balham"
                            suppressSizeToFit="true"
                            [rowData]="rowData"
                            [defaultColDef]="defaultColDef"
@@ -29,28 +28,33 @@
             <button type="button" class="btn btn-sm mr-2 btn-secondary" (click)="exportToExcel()"><i class="fa fa-table"></i> {{resource.default.excel}}</button>
           </div>
         </div>
-        <div class="col float-right" *ngIf="selectedObject != null">
-          <p>
-            {{resource.default.document_subject}}: {{selectedObject.subject}}
-          </p>
-          <p>
-            {{resource.default.document_no}} - {{selectedObject.no}}
-          </p>
-          <p>
-            {{resource.default.document_creator}}: {{selectedObject.creator}}
-          </p>
-          <p>
-            {{resource.default.document_dateOfRelease}}: {{selectedObject.dateOfRelease}} - {{resource.default.document_dateOfCreate}}: {{selectedObject.dateOfCreate}}
-          </p>
-          <p>
-            {{resource.default.document_issuer}}: {{selectedObject.issuerTitle}}
-          </p>
-          <p>
-            {{resource.default.document_domain}}: {{selectedObject.domainTitle}}
-          </p>
-          <p>
-            {{resource.default.document_type}}: {{selectedObject.typeTitle}}
-          </p>
+        <div class="readonly-panel float-right" *ngIf="selectedObject != null">
+          <div class="readonly-panel">
+            <p>
+              {{selectedObject.subject}}
+            </p>
+            <p>
+              {{resource.default.document_no}}: {{selectedObject.no}}
+            </p>
+            <p>
+              {{resource.default.document_creator}}: {{selectedObject.creator}}
+            </p>
+            <p>
+              {{resource.default.document_dateOfRelease}}: {{selectedObject.dateOfRelease}}
+            </p>
+            <p>
+              {{resource.default.document_dateOfCreate}}: {{selectedObject.dateOfCreate}}
+            </p>
+            <p>
+              {{resource.default.document_issuer}}: {{selectedObject.issuerTitle}}
+            </p>
+            <p>
+              {{resource.default.document_domain}}: {{selectedObject.domainTitle}}
+            </p>
+            <p>
+              {{resource.default.document_type}}: {{selectedObject.typeTitle}}
+            </p>
+          </div>         
           <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <button type="button" class="btn btn-sm mr-2 btn-primary" (click)="edit()"><i class="fa fa-edit"></i> {{resource.default.edit}}</button>
             <button type="button" class="btn btn-sm mr-2 btn-secondary" (click)="delete()"><i class="fa fa-remove"></i> {{resource.default.delete}}</button>
@@ -59,46 +63,19 @@
         <div class="image-slider" *ngIf="selectedObject != null">
           <div class="image-panel">
             <div class="image-list">
-              <div>
-                <img src="img/img-01.jpg" class="img-thumbnail" />
-              </div>
-              <div>
-                <img src="img/img-02.png" class="img-thumbnail" />
-              </div>
-              <div>
-                <img src="img/img-03.png" class="img-thumbnail" />
-              </div>
-              <div>
-                <img src="img/img-04.png" class="img-thumbnail" />
-              </div>
-              <div>
-                <img src="img/img-05.png" class="img-thumbnail" />
-              </div>
-              <div>
-                <img src="img/img-06.png" class="img-thumbnail" />
-              </div>
-              <div>
-                <img src="img/img-07.png" class="img-thumbnail" />
-              </div>
-              <div>
-                <img src="img/img-08.png" class="img-thumbnail" />
-              </div>
-              <div>
-                <img src="img/img-09.png" class="img-thumbnail" />
-              </div>
-              <div>
-                <img src="img/img-10.png" class="img-thumbnail" />
+              <div *ngFor="let id of selectedObject.documetFileIds">
+                <img [src]="getImageUrl(id)" class="img-thumbnail" />
+                <button class="image-btn remove-btn" (click)="deleteImage(id)"><i class="fa fa-remove"></i></button>
+                <button class="image-btn show-btn" (click)="showImage(id)"><i class="fa fa-picture-o"></i></button>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col">
-              <button class="btn btn-sm mr-2 btn-secondary mt-3" type="button" (click)="fileInput.click()">
-                <span>{{resource.default.document_file}}</span>
-                <input #fileInput type="file" (change)="handleFileInput($event.target.files)" style="display:none;" />
-              </button>
-            </div>
-          </div>
+          <div>
+            <button class="btn btn-sm mr-2 btn-secondary" type="button" (click)="fileInput.click()">
+              <i class="fa fa-upload"></i> {{resource.default.document_file}}
+              <input #fileInput type="file" (change)="handleFileInput($event.target.files)" style="display:none;" />
+            </button>
+          </div>          
         </div>
       </div>            
     </div>
@@ -183,7 +160,7 @@
           <div class="col">
             <div class="form-group">
               <label for="file">{{resource.default.document_text}}</label>
-              <textarea class="form-control" rows="10" placeholder="{{resource.default.document_text_placeholder}}"></textarea>
+              <textarea class="form-control" rows="6" placeholder="{{resource.default.document_text_placeholder}}"></textarea>
             </div>
           </div>
         </div>
@@ -199,5 +176,10 @@
       </form>
     </section>
   </div>
+  <div *ngIf="selectedImageUrl != null" class="image-viewer-back"></div>
+  <div *ngIf="selectedImageUrl != null" class="image-viewer">
+    <button class="image-btn remove-btn" (click)="selectedImageUrl = null"><i class="fa fa-remove"></i></button>
+    <div><img [src]="selectedImageUrl" /></div>
+  </div>  
 </div>
 
