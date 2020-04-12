@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28917.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleERP.Document.API", "Services\Document\SimpleERP.Document.API\SimpleERP.Document.API.csproj", "{0018ED2C-C94B-4A96-A242-5F7E441C6EF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{BFB04033-098E-4D5F-AE99-DBFF1881F1EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Document", "Document", "{6B6D3337-1C76-4F7E-AC35-4946B04E7C2E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{D3E3DDEB-F679-4FCE-AF31-B2DEF103B45E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleERP.UI.Web", "UI\SimpleERP.UI.Web\SimpleERP.UI.Web.csproj", "{29947778-40F1-49DB-BF28-55E1DEFB3F68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0018ED2C-C94B-4A96-A242-5F7E441C6EF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0018ED2C-C94B-4A96-A242-5F7E441C6EF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0018ED2C-C94B-4A96-A242-5F7E441C6EF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0018ED2C-C94B-4A96-A242-5F7E441C6EF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29947778-40F1-49DB-BF28-55E1DEFB3F68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29947778-40F1-49DB-BF28-55E1DEFB3F68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29947778-40F1-49DB-BF28-55E1DEFB3F68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29947778-40F1-49DB-BF28-55E1DEFB3F68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0018ED2C-C94B-4A96-A242-5F7E441C6EF6} = {6B6D3337-1C76-4F7E-AC35-4946B04E7C2E}
+		{6B6D3337-1C76-4F7E-AC35-4946B04E7C2E} = {BFB04033-098E-4D5F-AE99-DBFF1881F1EA}
+		{29947778-40F1-49DB-BF28-55E1DEFB3F68} = {D3E3DDEB-F679-4FCE-AF31-B2DEF103B45E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F65EACF5-4168-4345-B8AF-21143E9EC005}
+	EndGlobalSection
+EndGlobal
