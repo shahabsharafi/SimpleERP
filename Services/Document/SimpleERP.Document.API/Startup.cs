@@ -22,12 +22,13 @@ using SimpleERP.Libraries.API.Filters;
 using SimpleERP.Libraries.Infrastructure.Commons;
 using SimpleERP.Libraries.Infrastructure.Excel;
 using SimpleERP.Libraries.Infrastructure.QueryHandler;
+using Microsoft.Extensions.Hosting;
 
 namespace SimpleERP.Document.API
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder();
             builder.SetBasePath(env.ContentRootPath)
@@ -51,8 +52,13 @@ namespace SimpleERP.Document.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {            
+            //services.AddDbContext<ApplicationDbContext>(options => options
+            //    .UseMySql(Configuration.GetConnectionString("DefaultConnection"),
+            //        b => b.MigrationsAssembly("SimpleERP.Document.API")
+            //));
+
             services.AddDbContext<ApplicationDbContext>(options => options
-                .UseMySql(Configuration.GetConnectionString("DefaultConnection"),
+                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly("SimpleERP.Document.API")
             ));
 
@@ -73,12 +79,19 @@ namespace SimpleERP.Document.API
             
             services.AddAutoMapper(typeof(Startup).Assembly);
 
-            services.AddMvc(options =>
+            //services.AddMvc(options =>
+            //{
+            //    options.Filters.Add(typeof(QueryHandlerFilterAction));
+            //    options.Filters.Add(typeof(ExcelFilterAction));
+            //    options.Filters.Add(typeof(ApiResultFilterAttribute));
+            //}).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddControllers(options =>
             {
                 options.Filters.Add(typeof(QueryHandlerFilterAction));
                 options.Filters.Add(typeof(ExcelFilterAction));
                 options.Filters.Add(typeof(ApiResultFilterAttribute));
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            });
 
             var container = new ContainerBuilder();
             container.Populate(services);
@@ -87,7 +100,7 @@ namespace SimpleERP.Document.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -103,7 +116,13 @@ namespace SimpleERP.Document.API
                     .AllowCredentials();
             });
 
-            app.UseMvc();
+            //app.UseMvc();
+
+            app.UseRouting();
+            app.UseEndpoints(options =>
+            {
+                options.MapControllers();
+            });
         }
 
         

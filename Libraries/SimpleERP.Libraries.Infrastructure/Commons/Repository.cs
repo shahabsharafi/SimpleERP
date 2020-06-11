@@ -27,7 +27,7 @@ namespace SimpleERP.Libraries.Infrastructure.Commons
         #region Async Method
         public virtual Task<TEntity> GetByIdAsync(CancellationToken cancellationToken, params object[] ids)
         {
-            return Entities.FindAsync(ids, cancellationToken);
+            return Entities.FindAsync(ids, cancellationToken).AsTask();
         }
 
         public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken, bool saveNow = true)
