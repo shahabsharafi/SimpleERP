@@ -42,7 +42,24 @@ namespace SimpleERP.Document.API.Controllers
                 .Include(o => o.Issuer)
                 .Include(o => o.Domain)
                 .Include(o => o.Type);
-            var rows = list.Select(obj => this._mapper.Map<DocumentInfoModel>(obj)).OrderByDescending(o => o.Id);
+            var rows = list.Select(obj => new DocumentInfoModel() { 
+                Id = obj.Id, 
+                No = obj.No, 
+                Creator = obj.Creator, 
+                DateOfCreate = obj.DateOfCreate, 
+                DateOfModify = obj.DateOfModify,
+                DateOfRelease = obj.DateOfRelease,
+                DocumetFileIds = obj.DocumentFiles.Select(o => o.Id).ToArray(),
+                DomainId = obj.DomainId,
+                DomainTitle = obj.Domain.Title,
+                IssuerId = obj.IssuerId,
+                IssuerTitle = obj.Issuer.Title,
+                Modifier = obj.Modifier,
+                Subject = obj.Subject,
+                Text = obj.Text,
+                TypeId = obj.TypeId,
+                TypeTitle = obj.Type.Title
+            }).OrderByDescending(o => o.Id);
             return rows;
         }
 

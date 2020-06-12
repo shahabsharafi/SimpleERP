@@ -189,6 +189,13 @@ migration
 $ dotnet ef migrations add initial -o ./Infrastructure/Migrations
 $ dotnet ef database update
 
+OR
+
+https://www.entityframeworktutorial.net/code-first/code-based-migration-in-code-first.aspx
+enable-migrations
+add-migration initial -OutVariable ./Infrastructure/Migrations
+Update-Database
+
 Tutorial: Using the migrations feature - ASP.NET MVC with EF Core
 https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-3.0#introduction-to-migrations
 

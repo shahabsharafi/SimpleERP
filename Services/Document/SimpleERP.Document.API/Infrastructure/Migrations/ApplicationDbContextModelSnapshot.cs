@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleERP.Document.API.Infrastructure.Data;
 
@@ -14,21 +15,28 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("SimpleERP.Document.API.Infrastructure.Data.DocumentFile", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<byte[]>("Content");
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("ContentType");
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("DocumentInfoId");
+                    b.Property<long>("DocumentInfoId")
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -40,29 +48,42 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
             modelBuilder.Entity("SimpleERP.Document.API.Infrastructure.Data.DocumentInfo", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Creator");
+                    b.Property<string>("Creator")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DateOfCreate");
+                    b.Property<string>("DateOfCreate")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DateOfModify");
+                    b.Property<string>("DateOfModify")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DateOfRelease");
+                    b.Property<string>("DateOfRelease")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("DomainId");
+                    b.Property<long>("DomainId")
+                        .HasColumnType("bigint");
 
-                    b.Property<long>("IssuerId");
+                    b.Property<long>("IssuerId")
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("Modifier");
+                    b.Property<string>("Modifier")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("No");
+                    b.Property<string>("No")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Subject");
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("TypeId");
+                    b.Property<long>("TypeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -78,13 +99,18 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
             modelBuilder.Entity("SimpleERP.Document.API.Infrastructure.Data.Domain", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Hidden");
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("Readonly");
+                    b.Property<bool>("Readonly")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -124,13 +150,18 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
             modelBuilder.Entity("SimpleERP.Document.API.Infrastructure.Data.Issuer", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Hidden");
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("Readonly");
+                    b.Property<bool>("Readonly")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -191,13 +222,18 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
             modelBuilder.Entity("SimpleERP.Document.API.Infrastructure.Data.Type", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Hidden");
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("Readonly");
+                    b.Property<bool>("Readonly")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -229,9 +265,11 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
 
             modelBuilder.Entity("SimpleERP.Document.API.Infrastructure.Data.DocumentFile", b =>
                 {
-                    b.HasOne("SimpleERP.Document.API.Infrastructure.Data.DocumentInfo")
+                    b.HasOne("SimpleERP.Document.API.Infrastructure.Data.DocumentInfo", null)
                         .WithMany("DocumentFiles")
-                        .HasForeignKey("DocumentInfoId");
+                        .HasForeignKey("DocumentInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SimpleERP.Document.API.Infrastructure.Data.DocumentInfo", b =>
@@ -239,17 +277,20 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
                     b.HasOne("SimpleERP.Document.API.Infrastructure.Data.Domain", "Domain")
                         .WithMany("DocumentInfos")
                         .HasForeignKey("DomainId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SimpleERP.Document.API.Infrastructure.Data.Issuer", "Issuer")
                         .WithMany("DocumentInfos")
                         .HasForeignKey("IssuerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SimpleERP.Document.API.Infrastructure.Data.Type", "Type")
                         .WithMany("DocumentInfos")
                         .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

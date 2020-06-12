@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SimpleERP.Document.API.Infrastructure.Migrations
@@ -12,7 +12,7 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(nullable: true),
                     Readonly = table.Column<bool>(nullable: false),
                     Hidden = table.Column<bool>(nullable: false)
@@ -27,7 +27,7 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(nullable: true),
                     Readonly = table.Column<bool>(nullable: false),
                     Hidden = table.Column<bool>(nullable: false)
@@ -42,7 +42,7 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(nullable: true),
                     Readonly = table.Column<bool>(nullable: false),
                     Hidden = table.Column<bool>(nullable: false)
@@ -57,10 +57,9 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     No = table.Column<string>(nullable: true),
                     Subject = table.Column<string>(nullable: true),
-                    FilePath = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     DateOfRelease = table.Column<string>(nullable: true),
                     DateOfCreate = table.Column<string>(nullable: true),
@@ -90,6 +89,28 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
                         name: "FK_DocumentInfos_Types_TypeId",
                         column: x => x.TypeId,
                         principalTable: "Types",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentFile",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Content = table.Column<byte[]>(nullable: true),
+                    ContentType = table.Column<string>(nullable: true),
+                    DocumentInfoId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentFile", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentFile_DocumentInfos_DocumentInfoId",
+                        column: x => x.DocumentInfoId,
+                        principalTable: "DocumentInfos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -130,6 +151,11 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_DocumentFile_DocumentInfoId",
+                table: "DocumentFile",
+                column: "DocumentInfoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DocumentInfos_DomainId",
                 table: "DocumentInfos",
                 column: "DomainId");
@@ -147,6 +173,9 @@ namespace SimpleERP.Document.API.Infrastructure.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DocumentFile");
+
             migrationBuilder.DropTable(
                 name: "DocumentInfos");
 
