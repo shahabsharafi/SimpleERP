@@ -130,7 +130,7 @@ export class DocumentInfoComponent implements OnInit {
     if (this.selectedObject != null && this.selectedObject.id != null) {
       const id = this.selectedObject.id;
       this.documentInfoService.get(id).toPromise().then(response => {
-        this.form.setValue({
+        const obj = {
           "id": response.data.id,
           "no": response.data.no,
           "subject": response.data.subject,
@@ -140,7 +140,8 @@ export class DocumentInfoComponent implements OnInit {
           "issuerId": response.data.issuerId,
           "domainId": response.data.domainId,
           "typeId": response.data.typeId
-        });
+        };
+        this.form.setValue(obj);
         this.pageMode = 'form';
       });
     }

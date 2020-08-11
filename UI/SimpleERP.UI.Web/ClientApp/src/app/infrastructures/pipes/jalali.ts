@@ -21,13 +21,15 @@ export class JalaliPipe implements PipeTransform {
 }
 
 export class ConvertDate {
+
   public static toGeregorian(d: string): string {
     let m = moment(d, 'jYYYY-jMM-jDD');
     return m.locale('en').format('YYYY-MM-DD');
   }
 
   public static toJalali(d: string): string {
-    let m = moment(d, 'YYYY-MM-DD');
+    d = d.replace(/[ap]m$/i, '');
+    let m = moment(new Date(d));
     return m.locale('fa').format('YYYY-MM-DD');
   }
 }
