@@ -42,10 +42,7 @@
     "IIS Local": {
       "commandName": "IIS",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:4040/Web",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      "launchUrl": "http://localhost:4040"
     }
   }
 }
